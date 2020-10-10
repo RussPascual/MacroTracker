@@ -1,8 +1,49 @@
 package model;
 
-public class Food {
+public abstract class Food {
 
     private String name;
     private Macros macros;
 
+    // EFFECTS: constructs a food item
+    public Food(String name, Macros macros) {
+        this.name = name.toLowerCase();
+        this.macros = macros;
+    }
+
+    // EFFECTS: returns the name of the food
+    public String getName() {
+        return name;
+    }
+
+    // EFFECTS: returns the macros of the food
+    public Macros getMacros() {
+        return macros;
+    }
+
+    // EFFECTS: returns the protein value of the food
+    public double getProtein() {
+        return macros.getProtein();
+    }
+
+    // EFFECTS: returns the carbohydrates value of the food
+    public double getCarbs() {
+        return macros.getCarbs();
+    }
+
+    // EFFECTS: returns the fat value of the food
+    public double getFat() {
+        return macros.getFat();
+    }
+
+    // EFFECTS: returns the calories of the food
+    public double getCalories() {
+        return macros.getCalories();
+    }
+
+    // MODIFIES: this
+    // EFFECTS: adds input's macros onto meal's macros
+    public void addMacros(FoodItem foodItem) {
+        macros.addMacros(foodItem.getMacros());
+    }
 }

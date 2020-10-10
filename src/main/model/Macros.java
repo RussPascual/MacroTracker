@@ -16,13 +16,18 @@ public class Macros {
         this.calories = calculateCalories(protein, carbohydrates, fat);
     }
 
+    // EFFECTS: constructs Macros with all equal to 0
+    public Macros() {
+        new Macros(0, 0, 0);
+    }
+
     // EFFECTS: returns the quantity of protein
     public double getProtein() {
         return protein;
     }
 
     // EFFECTS: returns the quantity of carbohydrates
-    public double getCarbohydrates() {
+    public double getCarbs() {
         return carbohydrates;
     }
 
@@ -41,5 +46,14 @@ public class Macros {
     public double calculateCalories(double protein, double carbohydrates, double fat) {
         double calories = (protein * 4) + (carbohydrates * 4) + (fat * 9);
         return calories;
+    }
+
+    // MODIFIES: this
+    // EFFECTS: adds this' macros and input's macros together
+    public void addMacros(Macros macros) {
+        protein += macros.getProtein();
+        carbohydrates += macros.getCarbs();;
+        fat += macros.getFat();
+        calories += macros.getCalories();
     }
 }

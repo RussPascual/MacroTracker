@@ -1,4 +1,4 @@
-# My Personal Project - Diet Planner
+# My Personal Project - Diet Tracker
 
 ## Description
 

@@ -13,7 +13,8 @@ public class User {
     private int physActivity; // 0 (none), 1 (light), 2 (moderate), 3 (intense)
     private int goal; // 0 (lose weight), 1 (maintain weight), 2 (gain muscle)
     private Macros macrosNeeded;
-    private List<FoodJournal> foodJournal;
+    private Journal journal;
+    private Favourites saved;
 
     // EFFECTS: constructs a new User
     public User() {
