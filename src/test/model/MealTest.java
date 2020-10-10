@@ -47,4 +47,26 @@ public class MealTest {
         assertEquals(macros.getCalories(), meal.getMacros().getCalories());
         assertEquals(macros, meal.getMacros());
     }
+
+    @Test
+    public void testRemoveIngredient() {
+        meal.addIngredient(buns);
+        meal.addIngredient(patty);
+        meal.addIngredient(patty);
+        assertEquals(3, meal.getIngredients().size());
+
+        macros.addMacros(patty.getMacros());
+        macros.addMacros(patty.getMacros());
+        macros.addMacros(buns.getMacros());
+
+        meal.removeIngredient(patty);
+        macros.removeMacros(patty.getMacros());
+        assertEquals(2, meal.getIngredients().size());
+
+        assertEquals(macros.getProtein(), meal.getMacros().getProtein());
+        assertEquals(macros.getCarbs(), meal.getMacros().getCarbs());
+        assertEquals(macros.getFat(), meal.getMacros().getFat());
+        assertEquals(macros.getCalories(), meal.getMacros().getCalories());
+        assertEquals(macros, meal.getMacros());
+    }
 }

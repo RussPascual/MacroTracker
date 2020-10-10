@@ -14,16 +14,16 @@ public class DayLogTest {
     private Entry entry3;
     private Entry entry4;
     private FoodItem apple;
-    private FoodItem chickenBreast;
     private FoodItem rice;
     private Meal chickenBreastAndRice;
+    private String note;
 
     @BeforeEach
     public void setUp() {
-        dayLog = new DayLog(1);
+        dayLog = new DayLog(1, 150);
 
         apple = new FoodItem("apple", new Macros(0, 20, 0));
-        chickenBreast = new FoodItem("chicken breast", new Macros(20, 10, 2));
+        FoodItem chickenBreast = new FoodItem("chicken breast", new Macros(20, 10, 2));
         rice = new FoodItem("rice", new Macros(4, 50, 2));
 
         chickenBreastAndRice = new Meal("chicken breast and rice");
@@ -34,12 +34,16 @@ public class DayLogTest {
         entry2 = new Entry(chickenBreastAndRice, 13);
         entry3 = new Entry(rice, 14);
         entry4 = new Entry(apple, 14);
+
+        note = "This project is very cool";
     }
 
     @Test
     public void testDayLog() {
         assertTrue(dayLog.getEntries().isEmpty());
         assertEquals(1, dayLog.getDay());
+        assertTrue(dayLog.getEntries().isEmpty());
+        assertEquals(150, dayLog.getWeight());
     }
 
     @Test
@@ -47,6 +51,13 @@ public class DayLogTest {
         dayLog.addEntry(entry1);
         assertEquals(1, dayLog.getEntries().size());
         assertTrue(dayLog.getEntries().contains(entry1));
+    }
+
+    @Test
+    public void testAddNote() {
+        dayLog.addNote(note);
+        assertEquals(1, dayLog.getNotes().size());
+        assertTrue(dayLog.getNotes().contains(note));
     }
 
     @Test

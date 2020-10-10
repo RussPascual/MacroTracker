@@ -3,6 +3,9 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A Meal is a collection of FoodItems. Unlike a singular FoodItem, a Meal can have ingredients added to it
+ */
 public class Meal extends Food {
 
     private List<FoodItem> ingredients;
@@ -23,5 +26,12 @@ public class Meal extends Food {
     public void addIngredient(FoodItem food) {
         ingredients.add(food);
         super.addMacros(food);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: removes fooditem from meal if its contained, but only one instance
+    public void removeIngredient(FoodItem food) {
+        ingredients.remove(food);
+        super.removeMacros(food);
     }
 }

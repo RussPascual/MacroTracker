@@ -1,5 +1,9 @@
 package model;
 
+/**
+ * Macros represents the macronutrients in every food. Each of protein, carbs, and fat are measured in grams
+ * and have their own caloric value of 4 calories per gram of protein or carb and 9 calories per gram of fat
+ */
 public class Macros {
 
     private double protein;       // in grams
@@ -55,5 +59,15 @@ public class Macros {
         carbohydrates += macros.getCarbs();;
         fat += macros.getFat();
         calories += macros.getCalories();
+    }
+
+    // REQUIRES: input's macros <= this' macros at all fields
+    // MODIFIES: this
+    // EFFECTS: removes input's macros from this' macros
+    public void removeMacros(Macros macros) {
+        protein -= macros.getProtein();
+        carbohydrates -= macros.getCarbs();;
+        fat -= macros.getFat();
+        calories -= macros.getCalories();
     }
 }

@@ -1,5 +1,9 @@
 package model;
 
+/**
+ * Food can be either a single food item or a meal. Food represents the food recorded as an entry and contains
+ * information on its macros as well
+ */
 public abstract class Food {
 
     private String name;
@@ -45,5 +49,11 @@ public abstract class Food {
     // EFFECTS: adds input's macros onto meal's macros
     public void addMacros(FoodItem foodItem) {
         macros.addMacros(foodItem.getMacros());
+    }
+
+    // MODIFIES: this
+    // EFFECTS: removes input's macros from meal's macros
+    public void removeMacros(FoodItem foodItem) {
+        macros.removeMacros(foodItem.getMacros());
     }
 }

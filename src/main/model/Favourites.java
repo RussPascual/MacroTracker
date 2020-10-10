@@ -3,6 +3,10 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Favourites is a list of foods saved as a 'favourite'. These foods can be accessed later instead of reconstructed
+ * for easier replacement as another entry
+ */
 public class Favourites {
 
     private List<Food> foods;

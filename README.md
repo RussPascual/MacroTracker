@@ -23,4 +23,4 @@ similar app which offered similar services and helped me with my goals.
 - As a user, I want to be able to make notes and add them to my daily diary for later read
 - As a user, I want to be able to be alerted when I have reached my macro goals for the day
 - As a user, I want to be able to copy a day's food journal onto another day's food journal
-- 
+- As a user, 

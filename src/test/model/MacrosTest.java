@@ -46,4 +46,14 @@ public class MacrosTest {
         assertEquals(4 + 30, anotherMacros.getFat());
         assertEquals((20*4)+(70*4)+(34*9), anotherMacros.getCalories());
     }
+
+    @Test
+    public void testRemoveMacros() {
+        anotherMacros = new Macros(10, 20, 0);
+        macros.removeMacros(anotherMacros);
+        assertEquals(0, macros.getProtein());
+        assertEquals(30, macros.getCarbs());
+        assertEquals(4, macros.getFat());
+        assertEquals((30*4)+(4*9), macros.getCalories());
+    }
 }

@@ -1,5 +1,8 @@
 package model;
 
+/**
+ * An Entry represents a user's input of food eaten and time eaten
+ */
 public class Entry {
 
     private int hour; // within [0, 23]
