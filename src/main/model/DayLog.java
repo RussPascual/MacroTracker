@@ -22,6 +22,10 @@ public class DayLog {
         this.weight = weight;
     }
 
+    public void setEntries(List<Entry> entries) {
+        this.entries = entries;
+    }
+
     public int getDay() {
         return day;
     }

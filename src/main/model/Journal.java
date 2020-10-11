@@ -30,6 +30,16 @@ public class Journal {
         weightTracker.add(weight);
     }
 
+    // REQUIRES: this must have at least 2 DayLogs
+    // MODIFIES: this
+    // EFFECTS: copies the most previous DayLog's entry recording and uses it for the current day
+    public void copyPrevDay() {
+        DayLog copy = logs.get(logs.size() - 2);
+        DayLog current = logs.remove(logs.size() - 1);
+        current.setEntries(copy.getEntries());
+        logs.add(current);
+    }
+
     // REQUIRES: day <= size of this
     // EFFECTS: returns log whose day matches input
     public DayLog getLog(int day) {
@@ -38,7 +48,7 @@ public class Journal {
 
     // REQUIRES: this must have content
     // EFFECTS: returns the most recent log
-    public DayLog getLog() {
+    public DayLog getLastLog() {
         return logs.get(logs.size() - 1);
     }
 
@@ -79,5 +89,11 @@ public class Journal {
     public double remainingGoal() {
         double current = weightTracker.get(weightTracker.size() - 1);
         return goal - current;
+    }
+
+    // MODIFIES: this
+    // EFFECTS: updates the most recent day's logs with a new entry
+    public void addEntry(Entry entry) {
+        logs.get(logs.size() - 1).addEntry(entry);
     }
 }

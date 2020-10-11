@@ -6,8 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class JournalTest {
 
@@ -35,6 +34,27 @@ public class JournalTest {
     }
 
     @Test
+    public void testCopyPrevDay() {
+        Entry testEntry = new Entry(new FoodItem("test", new Macros()), 1);
+        Entry anotherTestEntry = new Entry(new FoodItem("another test", new Macros()), 2);
+
+        journal.nextDay(150.5);
+        journal.addEntry(testEntry);
+        journal.addEntry(anotherTestEntry);
+        journal.nextDay(150.8);
+
+        assertTrue(journal.getLastLog().getEntries().isEmpty());
+        assertFalse(journal.getLastLog().getEntries().contains(testEntry));
+        assertFalse(journal.getLastLog().getEntries().contains(anotherTestEntry));
+
+        journal.copyPrevDay();
+
+        assertEquals(2, journal.getLastLog().getEntries().size());
+        assertTrue(journal.getLastLog().getEntries().contains(testEntry));
+        assertTrue(journal.getLastLog().getEntries().contains(anotherTestEntry));
+    }
+
+    @Test
     public void testGetLogWithDay() {
         int size = 10;
         for (int i = 0; i < size; i++) {
@@ -44,12 +64,12 @@ public class JournalTest {
     }
 
     @Test
-    public void testGetLogNoInput() {
+    public void testGetLastLog() {
         int size = 10;
         for (int i = 0; i < size; i++) {
             journal.nextDay(150 + i);
         }
-        assertEquals(journal.getLogs().get(size - 1), journal.getLog());
+        assertEquals(journal.getLogs().get(size - 1), journal.getLastLog());
     }
 
     @Test
@@ -83,5 +103,15 @@ public class JournalTest {
             journal.nextDay(150 + i);
         }
         assertEquals(165.0 - 159.0, journal.remainingGoal());
+    }
+
+    @Test
+    public void testAddEntry() {
+        Entry testEntry = new Entry(new FoodItem("test", new Macros()), 1);
+
+        journal.nextDay(150);
+        assertTrue(journal.getLastLog().getEntries().isEmpty());
+        journal.addEntry(testEntry);
+        assertEquals(1, journal.getLastLog().getEntries().size());
     }
 }

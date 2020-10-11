@@ -36,6 +36,7 @@ public class FavouritesTest {
         fav.addFood(chickenBreastAndRice);
         fav.addFood(rice);
         assertEquals(chickenBreastAndRice, fav.getFood("chicken breast and rice"));
+        assertNull(fav.getFood("tuna"));
     }
 
     @Test

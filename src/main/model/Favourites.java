@@ -29,7 +29,7 @@ public class Favourites {
                 return food;
             }
         }
-        throw new IllegalArgumentException("food was not found in the list");
+        return null;
     }
 
     // REQUIRES: food must be in this
