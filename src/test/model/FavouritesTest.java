@@ -31,6 +31,22 @@ public class FavouritesTest {
     }
 
     @Test
+    public void testAddFoodAlreadyContained() {
+        fav.addFood(apple);
+        assertEquals(1, fav.getFoods().size());
+        fav.addFood(apple);
+        assertEquals(1, fav.getFoods().size());
+    }
+
+    @Test
+    public void testAddFoodNotYetContained() {
+        fav.addFood(apple);
+        assertEquals(1, fav.getFoods().size());
+        fav.addFood(chickenBreastAndRice);
+        assertEquals(2, fav.getFoods().size());
+    }
+
+    @Test
     public void testGetFood() {
         fav.addFood(apple);
         fav.addFood(chickenBreastAndRice);

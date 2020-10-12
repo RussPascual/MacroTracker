@@ -70,4 +70,14 @@ public class Macros {
         fat -= macros.getFat();
         calories -= macros.getCalories();
     }
+
+    // REQUIRES: input must all be non-negative
+    // MODIFIES: this
+    // EFFECTS: updates all the macro values to input
+    public void updateMacros(double protein, double carbohydrates, double fat, double calories) {
+        this.protein = protein;
+        this.carbohydrates = carbohydrates;
+        this.fat = fat;
+        this.calories = calories;
+    }
 }

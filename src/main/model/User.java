@@ -3,17 +3,154 @@ package model;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * User represents the user's data such as name, weight, goals, and personalized macro targets.
+ * A User also has a journal to track progress and list of favourite foods for easy access.
+ */
 public class User {
-
-    private static final int LOSE_WEIGHT = 0;
-    private static final int MAINTAIN_WEIGHT = 1;
-    private static final int GAIN_MUSCLE = 2;
 
     private String name;
     private double weight; // in kilograms
-    private int goal; // 0 (lose weight), 1 (maintain weight), 2 (gain muscle)
     private Macros macrosNeeded;
     private Journal journal;
     private Favourites saved;
 
+    // EFFECTS: constructs a new User
+    public User(String name, double weight, double weightGoal) {
+        this.name = name;
+        this.weight = weight;
+        this.macrosNeeded = new Macros();
+        this.journal = new Journal(weightGoal);
+        this.saved = new Favourites();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public double getWeight() {
+        return weight;
+    }
+
+    public Macros getMacrosNeeded() {
+        return macrosNeeded;
+    }
+
+    public Journal getJournal() {
+        return journal;
+    }
+
+    public Favourites getSaved() {
+        return saved;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
+    }
+
+    public void setMacrosNeeded(Macros macrosNeeded) {
+        this.macrosNeeded = macrosNeeded;
+    }
+
+    // REQUIRES: protein, carbs, and fat must add up to 100
+    // MODIFIES: this
+    // EFFECTS: sets macrosNeeded to the calorie input and the protein, carbs, and fat inputs
+    //          based on percentage of calories
+    public void setMacroGoals(double calories, double protein, double carbs, double fat) {
+        double proteinCalories = (protein / 100.0) * calories;
+        double carbohydratesCalories = (carbs / 100.0) * calories;
+        double fatCalories = (fat / 100.0) * calories;
+
+        double proteinGrams = proteinCalories / 4.0;
+        double carbohydratesGrams = carbohydratesCalories / 4.0;
+        double fatGrams = fatCalories / 9.0;
+
+        macrosNeeded.updateMacros(proteinGrams, carbohydratesGrams, fatGrams, calories);
+    }
+
+    // REQUIRES: time is within [0, 23]
+    // MODIFIES: this
+    // EFFECTS: adds an entry to the current day
+    public void addEntry(Food food, int time) {
+        Entry newEntry = new Entry(food, time);
+        journal.addEntry(newEntry);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: adds a note to the current day
+    public void addNote(String note) {
+        journal.getLastLog().addNote(note);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: saves a food item / meal as a favourite
+    public void addFavourite(Food food) {
+        saved.addFood(food);
+    }
+
+    // EFFECTS: returns true if daily calorie goals have been met for the day
+    public boolean metCalorieGoals() {
+        double caloriesSoFar = journal.getLastLog().totalMacros().getCalories();
+        if (caloriesSoFar >= macrosNeeded.getCalories()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // EFFECTS: returns true if daily calorie goals have been met for the day
+    public boolean metProteinGoals() {
+        double proteinSoFar = journal.getLastLog().totalMacros().getProtein();
+        if (proteinSoFar >= macrosNeeded.getProtein()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // EFFECTS: returns true if daily calorie goals have been met for the day
+    public boolean metCarbGoals() {
+        double carbsSoFar = journal.getLastLog().totalMacros().getCarbs();
+        if (carbsSoFar >= macrosNeeded.getCarbs()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // EFFECTS: returns true if daily calorie goals have been met for the day
+    public boolean metFatGoals() {
+        double fatSoFar = journal.getLastLog().totalMacros().getFat();
+        if (fatSoFar >= macrosNeeded.getFat()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // EFFECTS: returns the remaining macros needed for the day
+    public Macros remainingMacros() {
+        Macros currentMacros = journal.getLastLog().totalMacros();
+
+        double protein = macrosNeeded.getProtein() - currentMacros.getProtein();
+        double carbs = macrosNeeded.getCarbs() - currentMacros.getCarbs();
+        double fat = macrosNeeded.getFat() - currentMacros.getFat();
+
+        Macros remainingMacros = new Macros(protein, carbs, fat);
+        return remainingMacros;
+    }
+
+    // REQUIRES: weight > 0
+    // MODIFIES: this
+    // EFFECTS: updates the weight of the user
+    public void updateWeight(double weight) {
+        this.weight = weight;
+        if (!journal.getLogs().isEmpty()) {
+            journal.updateWeight(weight);
+        }
+    }
 }

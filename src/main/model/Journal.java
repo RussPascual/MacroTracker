@@ -23,6 +23,10 @@ public class Journal {
         return goal;
     }
 
+    public void setGoal(double goal) {
+        this.goal = goal;
+    }
+
     // MODIFIES: this
     // EFFECTS: adds another log into logs one day forward
     public void nextDay(double weight) {
@@ -74,7 +78,7 @@ public class Journal {
     public double viewProgress() {
         double changeSoFar = getTotalChange();
         double changeGoal = goal - weightTracker.get(0);
-        return (double) (changeSoFar / changeGoal) * 100;
+        return (changeSoFar / changeGoal) * 100;
     }
 
     // REQUIRES: this must have content

@@ -31,6 +31,7 @@ public class JournalTest {
         journal.nextDay(150.4);
         assertEquals(1, journal.getLogs().size());
         assertEquals(150.4, journal.getLog(1).getWeight());
+        assertEquals(1, journal.getLastLog().getDay());
     }
 
     @Test

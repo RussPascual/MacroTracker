@@ -21,8 +21,7 @@ public class Favourites {
         return foods;
     }
 
-    // REQUIRES: foodName must be in foods
-    // EFFECTS: returns the food whose name was passed
+    // EFFECTS: returns the food whose name was passed or null if it cannot be found
     public Food getFood(String foodName) {
         for (Food food : foods) {
             if (food.getName() == foodName.toLowerCase()) {
@@ -32,14 +31,15 @@ public class Favourites {
         return null;
     }
 
-    // REQUIRES: food must be in this
     // MODIFIES: this
-    // EFFECTS: adds food into foods
+    // EFFECTS: adds food into foods if not already contained
     public void addFood(Food food) {
-        foods.add(food);
+        if (!foods.contains(food)) {
+            foods.add(food);
+        }
     }
 
-    // REQUIRES: meal must be in this
+    // REQUIRES: food must be in this
     // MODIFIES: this
     // EFFECTS: removes food from foods
     public void removeFood(Food food) {

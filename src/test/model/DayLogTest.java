@@ -94,4 +94,25 @@ public class DayLogTest {
         assertTrue(dayLog.getFoodAtTime("Afternoon").contains(chickenBreastAndRice));
         assertEquals(3, dayLog.getFoodAtTime("Afternoon").size());
     }
+
+    @Test
+    public void testTotalMacros() {
+        Macros macros = new Macros();
+        dayLog.addEntry(entry1);
+        dayLog.addEntry(entry2);
+        dayLog.addEntry(entry3);
+        dayLog.addEntry(entry4);
+
+        Macros anotherMacros = dayLog.totalMacros();
+
+        macros.addMacros(entry1.getMacros());
+        macros.addMacros(entry2.getMacros());
+        macros.addMacros(entry3.getMacros());
+        macros.addMacros(entry4.getMacros());
+
+        assertEquals(macros.getProtein(), anotherMacros.getProtein());
+        assertEquals(macros.getCarbs(), anotherMacros.getCarbs());
+        assertEquals(macros.getFat(), anotherMacros.getFat());
+        assertEquals(macros.getCalories(), anotherMacros.getCalories());
+    }
 }

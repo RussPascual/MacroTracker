@@ -14,6 +14,7 @@ public class DayLog {
     private List<String> notes;
     private double weight;
 
+    // REQUIRES: weight > 0
     // EFFECTS: creates a new food log
     public DayLog(int day, double weight) {
         this.day = day;
@@ -78,5 +79,14 @@ public class DayLog {
             }
         }
         return foodAtTime;
+    }
+
+    // EFFECTS: returns the total macros of all the entries
+    public Macros totalMacros() {
+        Macros macros = new Macros();
+        for (Entry entry : entries) {
+            macros.addMacros(entry.getMacros());
+        }
+        return macros;
     }
 }
