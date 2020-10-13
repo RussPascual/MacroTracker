@@ -53,10 +53,23 @@ public class DayLog {
         entries.add(entry);
     }
 
+    // REQUIRES: pos is a valid index in the list of entries
+    // MODIFIES: this
+    // EFFECTS: removes this entry from the logs based on position inputted starting at 1
+    public void removeEntry(int pos) {
+        entries.remove(pos - 1);
+    }
+
     // MODIFIES: this
     // EFFECTS: adds note to log for the day
     public void addNote(String string) {
         notes.add(string);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: removes this note from the logs based on position inputted starting at 1
+    public void removeNote(int pos) {
+        notes.remove(pos - 1);
     }
 
     // EFFECTS: returns the food whose entry's time = input

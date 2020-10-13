@@ -48,8 +48,7 @@ public class Macros {
     // REQUIRES: input must all be non-negative
     // EFFECTS: calculates the number of calories given protein, carbs, and fat
     public double calculateCalories(double protein, double carbohydrates, double fat) {
-        double calories = (protein * 4) + (carbohydrates * 4) + (fat * 9);
-        return calories;
+        return (protein * 4) + (carbohydrates * 4) + (fat * 9);
     }
 
     // MODIFIES: this

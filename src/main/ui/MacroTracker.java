@@ -2,6 +2,7 @@ package ui;
 
 import model.*;
 
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -95,22 +96,22 @@ public class MacroTracker {
         informationMessages();
         String command = scanner.nextLine();
         boolean valid = false;
-
         while (!valid) {
             valid = true;
             if (command.equals("update")) {
                 updateInfo();
             } else if (command.equals("back")) {
-                // go back
+                processCommand();
             } else if (command.equals("quit")) {
-                // quit
+                System.out.println("Shutting down ...");
+
             } else {
                 valid = false;
                 System.out.println("Input was not one of the options! Please try again!");
                 command = scanner.nextLine();
             }
         }
-
+        processCommand();
     }
 
     private void updateInfoMessages() {
@@ -134,7 +135,7 @@ public class MacroTracker {
             } else if (command.equals("goal")) {
                 changeGoal();
             } else if (command.equals("back")) {
-                // go back
+                information();
             } else if (command.equals("quit")) {
                 // quit
             } else {
@@ -143,6 +144,7 @@ public class MacroTracker {
                 command = scanner.nextLine();
             }
         }
+        information();
     }
 
     private void changeGoal() {
@@ -150,25 +152,45 @@ public class MacroTracker {
         System.out.println("What will your new goal be?");
         double goal = scanner.nextDouble();
         scanner.nextLine();
-
-        user.getJournal().setGoal(goal);
+        boolean valid = false;
+        while (!valid) {
+            if (goal > 0) {
+                valid = true;
+                user.getJournal().setGoal(goal);
+            } else {
+                System.out.println("Input was invalid! Please try again!");
+                goal = scanner.nextDouble();
+                scanner.nextLine();
+            }
+        }
+        updateInfo();
     }
 
     private void changeWeight() {
         System.out.println("Current weight: " + user.getWeight());
-        System.out.println("What's your current weight?");
+        System.out.println("What's your weight now?");
         double weight = scanner.nextDouble();
         scanner.nextLine();
-
-        user.setWeight(weight);
+        boolean valid = false;
+        while (!valid) {
+            if (weight > 0) {
+                valid = true;
+                user.setWeight(weight);
+            } else {
+                System.out.println("Input was invalid! Please try again!");
+                weight = scanner.nextDouble();
+                scanner.nextLine();
+            }
+        }
+        updateInfo();
     }
 
     private void changeName() {
         System.out.println("Name: " + user.getWeight());
         System.out.println("What's your new name?");
         String name = scanner.nextLine();
-
         user.setName(name);
+        updateInfo();
     }
 
     private void progress() {
@@ -182,6 +204,7 @@ public class MacroTracker {
         System.out.println("You need " + proteinToGo + " more grams of protein for today!");
         System.out.println("You need " + carbsToGo + " more grams of carbohydrates for today!");
         System.out.println("You need " + fatToGo + " more grams of fat for today!");
+        processCommand();
     }
 
     private void favouritesMessages() {
@@ -202,7 +225,7 @@ public class MacroTracker {
             } else if (command.equals("add")) {
                 addToFavourites();
             } else if (command.equals("back")) {
-                // go back
+                processCommand();
             } else if (command.equals("quit")) {
                 // quit
             } else {
@@ -211,6 +234,7 @@ public class MacroTracker {
                 command = scanner.nextLine();
             }
         }
+        processCommand();
     }
 
     private void displayFavourites() {
@@ -233,9 +257,10 @@ public class MacroTracker {
         while (!valid) {
             valid = true;
             if (command.equals("add")) {
+                System.out.println("Type the name of the food you want to add!");
                 selectFoodToAdd();
             } else if (command.equals("back")) {
-                // go back
+                favourites();
             } else if (command.equals("quit")) {
                 // quit
             } else {
@@ -244,10 +269,10 @@ public class MacroTracker {
                 command = scanner.nextLine();
             }
         }
+        favourites();
     }
 
     private void selectFoodToAdd() {
-        System.out.println("Type the name of the food you want to add!");
         String command = scanner.nextLine();
         boolean valid = false;
         while (!valid) {
@@ -270,6 +295,7 @@ public class MacroTracker {
                 }
             }
         }
+        viewFavourites();
     }
 
     private void addToFavourites() {
@@ -294,6 +320,7 @@ public class MacroTracker {
                 System.out.println("One of the values inputted was invalid! Please try again!");
             }
         }
+        favourites();
     }
 
     private void journalMessages() {
@@ -315,9 +342,9 @@ public class MacroTracker {
             } else if (command.equals("today") && !user.getJournal().getLogs().isEmpty()) {
                 dayLog(user.getJournal().getLogs().size() - 1);
             } else if (command.equals("other") && !user.getJournal().getLogs().isEmpty()) {
-                // other
+                selectLog();
             } else if (command.equals("back")) {
-                // go back
+                processCommand();
             } else if (command.equals("quit")) {
                 // quit
             } else {
@@ -326,13 +353,170 @@ public class MacroTracker {
                 command = scanner.nextLine();
             }
         }
+        processCommand();
+    }
+
+    private void selectLog() {
+        System.out.println("Which log, in day number, would you like to view?");
+        int day = scanner.nextInt();
+        scanner.nextLine();
+        boolean valid = false;
+        while (!valid) {
+            if (day > 0 && day <= user.getJournal().getLogs().size()) {
+                valid = true;
+                dayLog(day);
+            } else {
+                System.out.println("Log selected does not exist! Please try again!");
+                day = scanner.nextInt();
+                scanner.nextLine();
+            }
+        }
+        journal();
     }
 
     private void newLog() {
+        System.out.println("What's your weight today?");
+        double weight = scanner.nextDouble();
+        scanner.nextLine();
+        boolean valid = false;
+        while (!valid) {
+            if (weight > 0) {
+                valid = true;
+                user.getJournal().nextDay(weight);
+            } else {
+                System.out.println("Input was invalid! Please try again!");
+                weight = scanner.nextDouble();
+                scanner.nextLine();
+            }
+        }
+        journal();
+    }
 
+    private void dayLogMessages() {
+        System.out.println("'food' to view food entries");
+        System.out.println("'note' to view notes");
+        System.out.println("'back' to go back");
+        System.out.println("'quit' to quit");
     }
 
     private void dayLog(int day) {
+        DayLog log = user.getJournal().getLog(day);
+        dayLogMessages();
+        String command = scanner.nextLine();
+        boolean valid = false;
+        while (!valid) {
+            valid = true;
+            if (command.equals("food")) {
+                foodLog(log, day);
+            } else if (command.equals("note")) {
+                noteLog(log, day);
+            } else if (command.equals("back")) {
+                journal();
+            } else if (command.equals("quit")) {
+                // quit
+            } else {
+                valid = false;
+                System.out.println("Input was not one of the options or no logs exist! Please try again!");
+                command = scanner.nextLine();
+            }
+        }
+        journal();
+    }
+
+    private void noteLogMessages(DayLog log) {
+        List<String> notes = log.getNotes();
+        System.out.println("Notes:");
+        for (String note : notes) {
+            System.out.println("\t - " + note);
+        }
+        System.out.println("'add' to add a note");
+        System.out.println("'remove' to remove a note");
+        System.out.println("'back' to go back");
+        System.out.println("'quit' to quit");
+    }
+
+    private void noteLog(DayLog log, int day) {
+        noteLogMessages(log);
+        String command = scanner.nextLine();
+        boolean valid = false;
+        while (!valid) {
+            valid = true;
+            if (command.equals("add")) {
+                System.out.println("What note would you like to add?");
+                command = scanner.nextLine();
+                log.addNote(command);
+            } else if (command.equals("remove")) {
+                System.out.println("Which note would you like to remove? Input the position from the top!");
+                removeNote(log, day);
+            } else if (command.equals("back")) {
+                dayLog(day);
+            } else if (command.equals("quit")) {
+                // quit
+            } else {
+                valid = false;
+                System.out.println("Input was not one of the options or no logs exist! Please try again!");
+                command = scanner.nextLine();
+            }
+        }
+        dayLog(day);
+    }
+
+    private void removeNote(DayLog log, int day) {
+        int command = scanner.nextInt();
+        scanner.nextLine();
+        boolean valid = false;
+        while (!valid) {
+            if (command > 0 && command <= log.getNotes().size()) {
+                valid = true;
+                log.removeNote(command);
+            } else {
+                System.out.println("Input was invalid! Please try again!");
+                command = scanner.nextInt();
+                scanner.nextLine();
+            }
+        }
+        noteLog(log, day);
+    }
+
+    private void foodLogMessages(DayLog log) {
+        System.out.println("Entries: ");
+        for (Entry entry : log.getEntries()) {
+            System.out.println("\t - " + entry.getFood() + " eaten at hour " + entry.getHour());
+        }
+        System.out.println("'add' to add a new entry");
+        System.out.println("'remove' to remove an entry");
+        System.out.println("'back' to go back");
+        System.out.println("'quit' to quit");
+    }
+
+    private void foodLog(DayLog log, int day) {
+        foodLogMessages(log);
+        String command = scanner.nextLine();
+        boolean valid = false;
+        while (!valid) {
+            valid = true;
+            if (command.equals("add")) {
+                addEntry();
+            } else if (command.equals("remove")) {
+                System.out.println("Which note would you like to remove? Input the position from the top!");
+                removeEntry(log, day);
+            } else if (command.equals("back")) {
+                dayLog(day);
+            } else if (command.equals("quit")) {
+                // quit
+            } else {
+                valid = false;
+                System.out.println("Input was not one of the options or no logs exist! Please try again!");
+                command = scanner.nextLine();
+            }
+        }
+        dayLog(day);
+    }
+
+    private void addEntry() {
+    }
+
+    private void removeEntry(DayLog log, int day) {
 
     }
 }

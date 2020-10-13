@@ -3,8 +3,7 @@ package model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DayLogTest {
 
@@ -54,10 +53,33 @@ public class DayLogTest {
     }
 
     @Test
+    public void testRemoveEntry() {
+        dayLog.addEntry(entry1);
+        dayLog.addEntry(entry2);
+        assertEquals(2, dayLog.getEntries().size());
+        assertTrue(dayLog.getEntries().contains(entry1));
+        assertTrue(dayLog.getEntries().contains(entry2));
+
+        dayLog.removeEntry(1);
+        assertEquals(1, dayLog.getEntries().size());
+        assertFalse(dayLog.getEntries().contains(entry1));
+    }
+
+    @Test
     public void testAddNote() {
         dayLog.addNote(note);
         assertEquals(1, dayLog.getNotes().size());
         assertTrue(dayLog.getNotes().contains(note));
+    }
+
+    @Test
+    public void testRemoveNote() {
+        dayLog.addNote(note);
+        assertEquals(1, dayLog.getNotes().size());
+        assertTrue(dayLog.getNotes().contains(note));
+
+        dayLog.removeEntry(1);
+        assertTrue(dayLog.getNotes().isEmpty());
     }
 
     @Test
