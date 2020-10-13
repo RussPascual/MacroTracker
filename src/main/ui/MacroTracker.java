@@ -12,20 +12,17 @@ public class MacroTracker {
 
     private User user;
     private Scanner scanner;
-
+    
     public MacroTracker() {
         scanner = new Scanner(System.in);
-        init();
-    }
-
-    public User getUser() {
-        return user;
+        runTracker();
     }
 
     // MODIFIES: this
     // EFFECTS: runs the application
     private void runTracker() {
-
+        init();
+        processCommand();
     }
 
     // MODIFIES: this
@@ -47,10 +44,10 @@ public class MacroTracker {
 
     // EFFECTS: displays the various options available to the user
     private void displayOptions() {
-        System.out.println("'info' to update your information\n");
-        System.out.println("'prog' to view your progress\n");
-        System.out.println("'favs' to view your favourites\n");
-        System.out.println("'logs' to access your journal logs\n");
+        System.out.println("'info' to update your information");
+        System.out.println("'prog' to view your progress");
+        System.out.println("'favs' to view your favourites");
+        System.out.println("'logs' to access your journal logs");
         System.out.println("'food' to create a new food item or meal");
         System.out.println("'quit' to quit");
     }
@@ -69,11 +66,11 @@ public class MacroTracker {
             } else if (command.equals("favs")) {
                 favourites();
             } else if (command.equals("logs")) {
-                // go back
+                journal();
             } else if (command.equals("food")) {
-                // go back
+                newFood();
             } else if (command.equals("quit")) {
-                // quit
+                System.out.println("Shutting down ...");
             } else {
                 valid = false;
                 System.out.println("Input was not one of the options! Please try again!");
@@ -89,7 +86,7 @@ public class MacroTracker {
 
         System.out.println("'update' to change personal info");
         System.out.println("'back' to go back");
-        System.out.println("'quit' to quit");
+        System.out.println("'home' to go back to home page");
     }
 
     private void information() {
@@ -100,11 +97,8 @@ public class MacroTracker {
             valid = true;
             if (command.equals("update")) {
                 updateInfo();
-            } else if (command.equals("back")) {
+            } else if (command.equals("back") || command.equals("home")) {
                 processCommand();
-            } else if (command.equals("quit")) {
-                System.out.println("Shutting down ...");
-
             } else {
                 valid = false;
                 System.out.println("Input was not one of the options! Please try again!");
@@ -119,7 +113,7 @@ public class MacroTracker {
         System.out.println("'weight' to update weight");
         System.out.println("'goal' to update weight goal");
         System.out.println("'back' to go back");
-        System.out.println("'quit' to quit");
+        System.out.println("'home' to go back to home page");
     }
 
     private void updateInfo() {
@@ -136,8 +130,8 @@ public class MacroTracker {
                 changeGoal();
             } else if (command.equals("back")) {
                 information();
-            } else if (command.equals("quit")) {
-                // quit
+            } else if (command.equals("home")) {
+                processCommand();
             } else {
                 valid = false;
                 System.out.println("Input was not one of the options! Please try again!");
@@ -163,6 +157,7 @@ public class MacroTracker {
                 scanner.nextLine();
             }
         }
+        System.out.println("Change successfully made!");
         updateInfo();
     }
 
@@ -182,28 +177,34 @@ public class MacroTracker {
                 scanner.nextLine();
             }
         }
+        System.out.println("Change successfully made!");
         updateInfo();
     }
 
     private void changeName() {
-        System.out.println("Name: " + user.getWeight());
+        System.out.println("Name: " + user.getName());
         System.out.println("What's your new name?");
         String name = scanner.nextLine();
         user.setName(name);
+        System.out.println("Change successfully made!");
         updateInfo();
     }
 
     private void progress() {
-        double weightProgress = user.getJournal().viewProgress();
-        double caloriesToGo = user.getMacrosNeeded().getCalories();
-        double proteinToGo = user.getMacrosNeeded().getProtein();
-        double carbsToGo = user.getMacrosNeeded().getCarbs();
-        double fatToGo = user.getMacrosNeeded().getFat();
-        System.out.println("You are " + weightProgress + "% of the way towards your goal!");
-        System.out.println("You need " + caloriesToGo + " more calories for today!");
-        System.out.println("You need " + proteinToGo + " more grams of protein for today!");
-        System.out.println("You need " + carbsToGo + " more grams of carbohydrates for today!");
-        System.out.println("You need " + fatToGo + " more grams of fat for today!");
+        if (!user.getJournal().getLogs().isEmpty()) {
+            double weightProgress = user.getJournal().viewProgress();
+            double caloriesToGo = user.getMacrosNeeded().getCalories();
+            double proteinToGo = user.getMacrosNeeded().getProtein();
+            double carbsToGo = user.getMacrosNeeded().getCarbs();
+            double fatToGo = user.getMacrosNeeded().getFat();
+            System.out.println("You are " + weightProgress + "% of the way towards your goal!");
+            System.out.println("You need " + caloriesToGo + " more calories for today!");
+            System.out.println("You need " + proteinToGo + " more grams of protein for today!");
+            System.out.println("You need " + carbsToGo + " more grams of carbohydrates for today!");
+            System.out.println("You need " + fatToGo + " more grams of fat for today!");
+        } else {
+            System.out.println("No records available! Try making a new entry first!");
+        }
         processCommand();
     }
 
@@ -211,7 +212,7 @@ public class MacroTracker {
         System.out.println("'view' to see a list of your favourite foods");
         System.out.println("'add' to add a new food to your favourite foods");
         System.out.println("'back' to go back");
-        System.out.println("'quit' to quit");
+        System.out.println("'home' to go back to home page");
     }
 
     private void favourites() {
@@ -221,13 +222,16 @@ public class MacroTracker {
         while (!valid) {
             valid = true;
             if (command.equals("view")) {
-                viewFavourites();
+                if (!user.getSaved().getFoods().isEmpty()) {
+                    viewFavourites();
+                } else {
+                    System.out.println("No foods have been saved yet!");
+                }
             } else if (command.equals("add")) {
-                addToFavourites();
-            } else if (command.equals("back")) {
+                user.addFavourite(makeFood());
+                System.out.println("Food was successfully added to favourites!");
+            } else if (command.equals("back") || command.equals("home")) {
                 processCommand();
-            } else if (command.equals("quit")) {
-                // quit
             } else {
                 valid = false;
                 System.out.println("Input was not one of the options! Please try again!");
@@ -238,12 +242,16 @@ public class MacroTracker {
     }
 
     private void displayFavourites() {
-        for (Food food : user.getSaved().getFoods()) {
-            System.out.println(
-                    food.getName() + ":\n" + "\t" + food.getCalories() + " calories, "
-                            + food.getProtein() + " grams of protein, " + food.getCarbs() + " grams of carbs, and "
-                            + food.getFat() + " grams of fat"
-            );
+        if (!user.getSaved().getFoods().isEmpty()) {
+            for (Food food : user.getSaved().getFoods()) {
+                System.out.println(
+                        food.getName() + ":\n" + "\t" + food.getCalories() + " calories, "
+                                + food.getProtein() + " grams of protein, " + food.getCarbs() + " grams of carbs, and "
+                                + food.getFat() + " grams of fat"
+                );
+            }
+        } else {
+            System.out.println("You have no foods saved yet!");
         }
     }
 
@@ -251,7 +259,7 @@ public class MacroTracker {
         displayFavourites();
         System.out.println("'add' to add a favourite food to current day's logs");
         System.out.println("'back' to go back");
-        System.out.println("'quit' to quit");
+        System.out.println("'home' to go back to home page");
         String command = scanner.nextLine();
         boolean valid = false;
         while (!valid) {
@@ -261,8 +269,8 @@ public class MacroTracker {
                 selectFoodToAdd();
             } else if (command.equals("back")) {
                 favourites();
-            } else if (command.equals("quit")) {
-                // quit
+            } else if (command.equals("home")) {
+                processCommand();
             } else {
                 valid = false;
                 System.out.println("Input was not one of the options! Please try again!");
@@ -274,34 +282,28 @@ public class MacroTracker {
 
     private void selectFoodToAdd() {
         String command = scanner.nextLine();
+        int hour;
         boolean valid = false;
         while (!valid) {
             if (user.getSaved().getFood(command) == null) {
                 System.out.println("Food selected was not one of the options! Please try again!");
                 command = scanner.nextLine();
             } else {
+                valid = true;
                 Food selectedFood = user.getSaved().getFood(command);
-                System.out.println("What time (hour from 0-23) are you eating this?");
-                int hour = scanner.nextInt();
-                scanner.nextLine();
-                while (!valid) {
-                    if (hour >= 0 && hour < 24) {
-                        valid = true;
-                        user.getJournal().addEntry(new Entry(selectedFood, hour));
-                    } else {
-                        System.out.println("Time selected was invalid! Please try again!");
-                        command = scanner.nextLine();
-                    }
-                }
+                hour = timeOfEntry();
+                user.getJournal().addEntry(new Entry(selectedFood, hour));
             }
         }
+        System.out.println("Entry successfully added!");
         viewFavourites();
     }
 
-    private void addToFavourites() {
+    private FoodItem makeFood() {
         System.out.println("What is the name of your food?");
         String foodName = scanner.nextLine();
         boolean valid = false;
+        FoodItem food = null;
         while (!valid) {
             System.out.println("How many grams of protein does it contain?");
             double protein = scanner.nextDouble();
@@ -314,13 +316,12 @@ public class MacroTracker {
             scanner.nextLine();
             if (protein >= 0 && carbs >= 0 && fat >= 0) {
                 valid = true;
-                Food food = new FoodItem(foodName, new Macros(protein, carbs, fat));
-                user.addFavourite(food);
+                food = new FoodItem(foodName, new Macros(protein, carbs, fat));
             } else {
-                System.out.println("One of the values inputted was invalid! Please try again!");
+                System.out.println("At least one of the values inputted was invalid! Please try again!");
             }
         }
-        favourites();
+        return food;
     }
 
     private void journalMessages() {
@@ -328,7 +329,7 @@ public class MacroTracker {
         System.out.println("'today' to view today's logs");
         System.out.println("'other' to view another day's logs");
         System.out.println("'back' to go back");
-        System.out.println("'quit' to quit");
+        System.out.println("'home' to go back to home page");
     }
 
     private void journal() {
@@ -343,10 +344,8 @@ public class MacroTracker {
                 dayLog(user.getJournal().getLogs().size() - 1);
             } else if (command.equals("other") && !user.getJournal().getLogs().isEmpty()) {
                 selectLog();
-            } else if (command.equals("back")) {
+            } else if (command.equals("back") || command.equals("home")) {
                 processCommand();
-            } else if (command.equals("quit")) {
-                // quit
             } else {
                 valid = false;
                 System.out.println("Input was not one of the options or no logs exist! Please try again!");
@@ -389,6 +388,7 @@ public class MacroTracker {
                 scanner.nextLine();
             }
         }
+        System.out.println("New log successfully created!");
         journal();
     }
 
@@ -396,7 +396,7 @@ public class MacroTracker {
         System.out.println("'food' to view food entries");
         System.out.println("'note' to view notes");
         System.out.println("'back' to go back");
-        System.out.println("'quit' to quit");
+        System.out.println("'home' to go back to home page");
     }
 
     private void dayLog(int day) {
@@ -412,11 +412,11 @@ public class MacroTracker {
                 noteLog(log, day);
             } else if (command.equals("back")) {
                 journal();
-            } else if (command.equals("quit")) {
-                // quit
+            } else if (command.equals("home")) {
+                processCommand();
             } else {
                 valid = false;
-                System.out.println("Input was not one of the options or no logs exist! Please try again!");
+                System.out.println("Input was not one of the options! Please try again!");
                 command = scanner.nextLine();
             }
         }
@@ -432,7 +432,7 @@ public class MacroTracker {
         System.out.println("'add' to add a note");
         System.out.println("'remove' to remove a note");
         System.out.println("'back' to go back");
-        System.out.println("'quit' to quit");
+        System.out.println("'home' to go back to home page");
     }
 
     private void noteLog(DayLog log, int day) {
@@ -445,16 +445,16 @@ public class MacroTracker {
                 System.out.println("What note would you like to add?");
                 command = scanner.nextLine();
                 log.addNote(command);
+                System.out.println("Note was successfully added!");
             } else if (command.equals("remove")) {
-                System.out.println("Which note would you like to remove? Input the position from the top!");
                 removeNote(log, day);
             } else if (command.equals("back")) {
                 dayLog(day);
-            } else if (command.equals("quit")) {
-                // quit
+            } else if (command.equals("home")) {
+                processCommand();
             } else {
                 valid = false;
-                System.out.println("Input was not one of the options or no logs exist! Please try again!");
+                System.out.println("Input was not one of the options! Please try again!");
                 command = scanner.nextLine();
             }
         }
@@ -462,31 +462,37 @@ public class MacroTracker {
     }
 
     private void removeNote(DayLog log, int day) {
-        int command = scanner.nextInt();
+        System.out.println("Which note would you like to remove? Input the position from the top!");
+        int position = scanner.nextInt();
         scanner.nextLine();
         boolean valid = false;
         while (!valid) {
-            if (command > 0 && command <= log.getNotes().size()) {
+            if (position > 0 && position <= log.getNotes().size()) {
                 valid = true;
-                log.removeNote(command);
+                log.removeNote(position);
             } else {
                 System.out.println("Input was invalid! Please try again!");
-                command = scanner.nextInt();
+                position = scanner.nextInt();
                 scanner.nextLine();
             }
         }
+        System.out.println("Note was successfully removed!");
         noteLog(log, day);
     }
 
     private void foodLogMessages(DayLog log) {
-        System.out.println("Entries: ");
-        for (Entry entry : log.getEntries()) {
-            System.out.println("\t - " + entry.getFood() + " eaten at hour " + entry.getHour());
+        if (!log.getEntries().isEmpty()) {
+            System.out.println("Entries: ");
+            for (Entry entry : log.getEntries()) {
+                System.out.println("\t - " + entry.getFood() + " eaten at hour " + entry.getHour());
+            }
+        } else {
+            System.out.println("Log is empty! Please add an entry first!");
         }
         System.out.println("'add' to add a new entry");
         System.out.println("'remove' to remove an entry");
         System.out.println("'back' to go back");
-        System.out.println("'quit' to quit");
+        System.out.println("'home' to go back to home page");
     }
 
     private void foodLog(DayLog log, int day) {
@@ -496,27 +502,197 @@ public class MacroTracker {
         while (!valid) {
             valid = true;
             if (command.equals("add")) {
-                addEntry();
+                addEntry(log, day);
             } else if (command.equals("remove")) {
-                System.out.println("Which note would you like to remove? Input the position from the top!");
+                System.out.println("Which entry would you like to remove? Input the position from the top!");
                 removeEntry(log, day);
             } else if (command.equals("back")) {
                 dayLog(day);
-            } else if (command.equals("quit")) {
-                // quit
+            } else if (command.equals("home")) {
+                processCommand();
             } else {
                 valid = false;
-                System.out.println("Input was not one of the options or no logs exist! Please try again!");
+                System.out.println("Input was not one of the options! Please try again!");
                 command = scanner.nextLine();
             }
         }
         dayLog(day);
     }
 
-    private void addEntry() {
+    private void addEntryMessages() {
+        System.out.println("'new' to create a new entry");
+        System.out.println("'favs' to add an entry from your favourites");
+        System.out.println("'back' to go back");
+        System.out.println("'home' to go back to home page");
+    }
+
+    private void addEntry(DayLog log, int day) {
+        addEntryMessages();
+        String command = scanner.nextLine();
+        boolean valid = false;
+        while (!valid) {
+            valid = true;
+            if (command.equals("new")) {
+                Entry entry = makeEntry();
+                log.addEntry(entry);
+            } else if (command.equals("favs")) {
+                displayFavourites();
+                System.out.println("Type the name of the food you want to add!");
+                selectFoodToAdd();
+            } else if (command.equals("back")) {
+                foodLog(log, day);
+            } else if (command.equals("home")) {
+                processCommand();
+            } else {
+                valid = false;
+                System.out.println("Input was not one of the options! Please try again!");
+                command = scanner.nextLine();
+            }
+        }
+        foodLog(log, day);
+    }
+
+    private int timeOfEntry() {
+        System.out.println("What time (hour from 0-23) are you eating this?");
+        int time = 0;
+        int hour = scanner.nextInt();
+        scanner.nextLine();
+        boolean valid = false;
+        while (!valid) {
+            if (hour >= 0 && hour < 24) {
+                valid = true;
+                time = hour;
+            } else {
+                System.out.println("Time selected was invalid! Please try again!");
+                hour = scanner.nextInt();
+                scanner.nextLine();
+            }
+        }
+        return time;
+    }
+
+    private Entry makeEntry() {
+        Food food = makeFood();
+        int hour = timeOfEntry();
+        System.out.println("Entry was successfully created!");
+        return new Entry(food, hour);
     }
 
     private void removeEntry(DayLog log, int day) {
+        if (!log.getEntries().isEmpty()) {
+            int position = scanner.nextInt();
+            scanner.nextLine();
+            boolean valid = false;
+            while (!valid) {
+                if (position > 0 && position <= log.getEntries().size()) {
+                    valid = true;
+                    log.removeEntry(position);
+                } else {
+                    System.out.println("Input was invalid! Please try again!");
+                    position = scanner.nextInt();
+                    scanner.nextLine();
+                }
+            }
+        } else {
+            System.out.println("Log is empty! There are no entries to remove!");
+        }
+        foodLog(log, day);
+    }
 
+    private void newFood() {
+        System.out.println("'item' to create a new food item (ex. white rice)");
+        System.out.println("'meal' to create a new meal (ex. fried rice)");
+        System.out.println("'back' to go back");
+        System.out.println("'home' to go back to home page");
+        String command = scanner.nextLine();
+        boolean valid = false;
+        while (!valid) {
+            valid = true;
+            if (command.equals("item")) {
+                makeFoodItem();
+            } else if (command.equals("meal")) {
+                makeMeal();
+            } else if (command.equals("back") || command.equals("home")) {
+                processCommand();
+            } else {
+                valid = false;
+                System.out.println("Input was not one of the options! Please try again!");
+                command = scanner.nextLine();
+            }
+        }
+        processCommand();
+    }
+
+    private Meal addIngredients(Meal meal) {
+        String command;
+        boolean keepGoing = true;
+        int quantity = 1;
+        while (keepGoing) {
+            System.out.println("Making meal ingredient #" + quantity + "!");
+            meal.addIngredient(makeFood());
+            System.out.println("Ingredient successfully added!");
+            System.out.println("Would you like to add more? 'yes' or 'no'");
+            command = scanner.nextLine();
+            boolean valid = false;
+            while (!valid) {
+                if (command.equals("yes")) {
+                    valid = true;
+                    quantity++;
+                } else if (command.equals("no")) {
+                    valid = true;
+                    keepGoing = false;
+                } else {
+                    System.out.println("Input was invalid! Please try again!");
+                }
+            }
+        }
+        return meal;
+    }
+
+    private void makeMeal() {
+        System.out.println("What will you name this meal?");
+        String command = scanner.nextLine();
+        Meal emptyMeal = new Meal(command);
+        Meal meal = addIngredients(emptyMeal);
+        makeFoodMessages();
+        addFood(meal);
+    }
+
+    private void makeFoodMessages() {
+        System.out.println("'entry' to add food to logs");
+        System.out.println("'favs' to add food to favourites");
+        System.out.println("'back' to go back");
+        System.out.println("'home' to go back to home page");
+    }
+
+    private void addFood(Food food) {
+        String command = scanner.nextLine();
+        boolean valid = false;
+        while (!valid) {
+            valid = true;
+            if (command.equals("entry")) {
+                int hour = timeOfEntry();
+                user.getJournal().addEntry(new Entry(food, hour));
+                System.out.println("Successfully added entry to your logs!");
+            } else if (command.equals("favs")) {
+                user.addFavourite(food);
+                System.out.println("Successfully added food to favourites!");
+            } else if (command.equals("back")) {
+                newFood();
+            } else if (command.equals("home")) {
+                processCommand();
+            } else {
+                valid = false;
+                System.out.println("Input was not one of the options! Please try again!");
+                command = scanner.nextLine();
+            }
+        }
+        newFood();
+    }
+
+    private void makeFoodItem() {
+        FoodItem foodItem = makeFood();
+        makeFoodMessages();
+        addFood(foodItem);
     }
 }
