@@ -12,7 +12,8 @@ public class MacroTracker {
 
     private User user;
     private Scanner scanner;
-    
+
+    // EFFECTS: initializes scanner and starts the application
     public MacroTracker() {
         scanner = new Scanner(System.in);
         runTracker();
@@ -52,6 +53,8 @@ public class MacroTracker {
         System.out.println("'quit' to quit");
     }
 
+    // MODIFIES: this
+    // EFFECTS: processes user command
     private void processCommand() {
         displayOptions();
         String command = scanner.nextLine();
@@ -79,6 +82,7 @@ public class MacroTracker {
         }
     }
 
+    // EFFECTS: prints the user's information and provides options for next command
     private void informationMessages() {
         System.out.println("Name: " + user.getName());
         System.out.println("Weight: " + user.getWeight());
@@ -89,6 +93,8 @@ public class MacroTracker {
         System.out.println("'home' to go back to home page");
     }
 
+    // MODIFIES: this
+    // EFFECTS: processes user command for information
     private void information() {
         informationMessages();
         String command = scanner.nextLine();
@@ -108,6 +114,7 @@ public class MacroTracker {
         processCommand();
     }
 
+    // EFFECTS: prints the options for updating user information
     private void updateInfoMessages() {
         System.out.println("'name' to update name");
         System.out.println("'weight' to update weight");
@@ -116,6 +123,8 @@ public class MacroTracker {
         System.out.println("'home' to go back to home page");
     }
 
+    // MODIFIES: this
+    // EFFECTS: processes user command for updating user information
     private void updateInfo() {
         updateInfoMessages();
         String command = scanner.nextLine();
@@ -141,6 +150,8 @@ public class MacroTracker {
         information();
     }
 
+    // MODIFIES: this
+    // EFFECTS: changes the goal of the user based on input
     private void changeGoal() {
         System.out.println("Current goal: " + user.getJournal().getGoal());
         System.out.println("What will your new goal be?");
@@ -161,6 +172,8 @@ public class MacroTracker {
         updateInfo();
     }
 
+    // MODIFIES: this
+    // EFFECTS: changes the weight of the user based on input
     private void changeWeight() {
         System.out.println("Current weight: " + user.getWeight());
         System.out.println("What's your weight now?");
@@ -181,6 +194,8 @@ public class MacroTracker {
         updateInfo();
     }
 
+    // MODIFIES: this
+    // EFFECTS: changes the name of the user based on input
     private void changeName() {
         System.out.println("Name: " + user.getName());
         System.out.println("What's your new name?");
@@ -190,6 +205,7 @@ public class MacroTracker {
         updateInfo();
     }
 
+    // EFFECTS: prints the user's progress if there is any
     private void progress() {
         if (!user.getJournal().getLogs().isEmpty()) {
             double weightProgress = user.getJournal().viewProgress();
@@ -208,6 +224,7 @@ public class MacroTracker {
         processCommand();
     }
 
+    // EFFECTS: prints the options for the user's favourites
     private void favouritesMessages() {
         System.out.println("'view' to see a list of your favourite foods");
         System.out.println("'add' to add a new food to your favourite foods");
@@ -215,6 +232,8 @@ public class MacroTracker {
         System.out.println("'home' to go back to home page");
     }
 
+    // MODIFIES: this
+    // EFFECTS: processes user command for favourites
     private void favourites() {
         favouritesMessages();
         String command = scanner.nextLine();
@@ -241,6 +260,7 @@ public class MacroTracker {
         processCommand();
     }
 
+    // EFFECTS: prints the user's favourite foods if any
     private void displayFavourites() {
         if (!user.getSaved().getFoods().isEmpty()) {
             for (Food food : user.getSaved().getFoods()) {
@@ -255,6 +275,8 @@ public class MacroTracker {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: processes user command for favourites
     private void viewFavourites() {
         displayFavourites();
         System.out.println("'add' to add a favourite food to current day's logs");
@@ -280,6 +302,8 @@ public class MacroTracker {
         favourites();
     }
 
+    // MODIFIES: this
+    // EFFECTS: adds a food from favourites to logs as an entry
     private void selectFoodToAdd() {
         String command = scanner.nextLine();
         int hour;
@@ -299,6 +323,7 @@ public class MacroTracker {
         viewFavourites();
     }
 
+    // EFFECTS: returns a created food item
     private FoodItem makeFood() {
         System.out.println("What is the name of your food?");
         String foodName = scanner.nextLine();
@@ -324,6 +349,7 @@ public class MacroTracker {
         return food;
     }
 
+    // EFFECTS: prints the options for the user's journal
     private void journalMessages() {
         System.out.println("'new' to start a new day's logs");
         System.out.println("'today' to view today's logs");
@@ -332,6 +358,8 @@ public class MacroTracker {
         System.out.println("'home' to go back to home page");
     }
 
+    // MODIFIES: this
+    // EFFECTS: processes user command for journal
     private void journal() {
         journalMessages();
         String command = scanner.nextLine();
@@ -355,6 +383,7 @@ public class MacroTracker {
         processCommand();
     }
 
+    // EFFECTS: views the log specified by user
     private void selectLog() {
         System.out.println("Which log, in day number, would you like to view?");
         int day = scanner.nextInt();
@@ -373,6 +402,8 @@ public class MacroTracker {
         journal();
     }
 
+    // MODIFIES: this
+    // EFFECTS: creates a new log in the journal
     private void newLog() {
         System.out.println("What's your weight today?");
         double weight = scanner.nextDouble();
@@ -392,6 +423,7 @@ public class MacroTracker {
         journal();
     }
 
+    // EFFECTS: prints the options for a day log
     private void dayLogMessages() {
         System.out.println("'food' to view food entries");
         System.out.println("'note' to view notes");
@@ -399,6 +431,9 @@ public class MacroTracker {
         System.out.println("'home' to go back to home page");
     }
 
+    // REQUIRES: day > 0 && day <= size of this
+    // MODIFIES: this
+    // EFFECTS: processes user command for a day log
     private void dayLog(int day) {
         DayLog log = user.getJournal().getLog(day);
         dayLogMessages();
@@ -423,11 +458,16 @@ public class MacroTracker {
         journal();
     }
 
+    // EFFECTS: prints the notes present in the log
     private void noteLogMessages(DayLog log) {
         List<String> notes = log.getNotes();
-        System.out.println("Notes:");
-        for (String note : notes) {
-            System.out.println("\t - " + note);
+        if (!notes.isEmpty()) {
+            System.out.println("Notes:");
+            for (String note : notes) {
+                System.out.println("\t - " + note);
+            }
+        } else {
+            System.out.println("You have no notes for today");
         }
         System.out.println("'add' to add a note");
         System.out.println("'remove' to remove a note");
@@ -435,6 +475,9 @@ public class MacroTracker {
         System.out.println("'home' to go back to home page");
     }
 
+    // REQUIRES: day > 0 && day <= size of this
+    // MODIFIES: this
+    // EFFECTS: processes user command for notes in a log
     private void noteLog(DayLog log, int day) {
         noteLogMessages(log);
         String command = scanner.nextLine();
@@ -461,25 +504,33 @@ public class MacroTracker {
         dayLog(day);
     }
 
+    // REQUIRES: day > 0 && day <= size of this
+    // MODIFIES: this
+    // EFFECTS: removes a note from the logs if any
     private void removeNote(DayLog log, int day) {
-        System.out.println("Which note would you like to remove? Input the position from the top!");
-        int position = scanner.nextInt();
-        scanner.nextLine();
-        boolean valid = false;
-        while (!valid) {
-            if (position > 0 && position <= log.getNotes().size()) {
-                valid = true;
-                log.removeNote(position);
-            } else {
-                System.out.println("Input was invalid! Please try again!");
-                position = scanner.nextInt();
-                scanner.nextLine();
+        if (!log.getNotes().isEmpty()) {
+            System.out.println("Which note would you like to remove? Input the position from the top!");
+            int position = scanner.nextInt();
+            scanner.nextLine();
+            boolean valid = false;
+            while (!valid) {
+                if (position > 0 && position <= log.getNotes().size()) {
+                    valid = true;
+                    log.removeNote(position);
+                } else {
+                    System.out.println("Input was invalid! Please try again!");
+                    position = scanner.nextInt();
+                    scanner.nextLine();
+                }
             }
+            System.out.println("Note was successfully removed!");
+        } else {
+            System.out.println("You have no notes to remove!");
         }
-        System.out.println("Note was successfully removed!");
         noteLog(log, day);
     }
 
+    // EFFECTS: prints the user's entries for the day and the options for modifying the logs
     private void foodLogMessages(DayLog log) {
         if (!log.getEntries().isEmpty()) {
             System.out.println("Entries: ");
@@ -495,6 +546,9 @@ public class MacroTracker {
         System.out.println("'home' to go back to home page");
     }
 
+    // REQUIRES: day > 0 && day <= size of this
+    // MODIFIES: this
+    // EFFECTS: processes user command for the food log chosen
     private void foodLog(DayLog log, int day) {
         foodLogMessages(log);
         String command = scanner.nextLine();
@@ -519,6 +573,7 @@ public class MacroTracker {
         dayLog(day);
     }
 
+    // EFFECTS: prints the options for adding an entry
     private void addEntryMessages() {
         System.out.println("'new' to create a new entry");
         System.out.println("'favs' to add an entry from your favourites");
@@ -526,6 +581,9 @@ public class MacroTracker {
         System.out.println("'home' to go back to home page");
     }
 
+    // REQUIRES: day > 0 && day <= size of this
+    // MODIFIES: this
+    // EFFECTS: processes user command for adding an entry
     private void addEntry(DayLog log, int day) {
         addEntryMessages();
         String command = scanner.nextLine();
@@ -552,6 +610,7 @@ public class MacroTracker {
         foodLog(log, day);
     }
 
+    // EFFECTS: returns the time for the entry
     private int timeOfEntry() {
         System.out.println("What time (hour from 0-23) are you eating this?");
         int time = 0;
@@ -571,6 +630,8 @@ public class MacroTracker {
         return time;
     }
 
+    // MODIFIES: this
+    // EFFECTS: adds a new entry to logs
     private Entry makeEntry() {
         Food food = makeFood();
         int hour = timeOfEntry();
@@ -578,6 +639,9 @@ public class MacroTracker {
         return new Entry(food, hour);
     }
 
+    // REQUIRES: day > 0 && day <= size of this
+    // MODIFIES: this
+    // EFFECTS: removes an entry if any
     private void removeEntry(DayLog log, int day) {
         if (!log.getEntries().isEmpty()) {
             int position = scanner.nextInt();
@@ -599,11 +663,17 @@ public class MacroTracker {
         foodLog(log, day);
     }
 
-    private void newFood() {
+    // EFFECTS: prints the options for creating a new food
+    private void newFoodMessages() {
         System.out.println("'item' to create a new food item (ex. white rice)");
         System.out.println("'meal' to create a new meal (ex. fried rice)");
         System.out.println("'back' to go back");
         System.out.println("'home' to go back to home page");
+    }
+
+    // EFFECTS: processes user command for creating a new food
+    private void newFood() {
+        newFoodMessages();
         String command = scanner.nextLine();
         boolean valid = false;
         while (!valid) {
@@ -623,6 +693,8 @@ public class MacroTracker {
         processCommand();
     }
 
+    // MODIFIES: meal
+    // EFFECTS: returns a meal after adding ingredients to it
     private Meal addIngredients(Meal meal) {
         String command;
         boolean keepGoing = true;
@@ -649,6 +721,7 @@ public class MacroTracker {
         return meal;
     }
 
+    // EFFECTS: creates a new meal
     private void makeMeal() {
         System.out.println("What will you name this meal?");
         String command = scanner.nextLine();
@@ -658,6 +731,7 @@ public class MacroTracker {
         addFood(meal);
     }
 
+    // EFFECTS: prints the options for where to add the food
     private void makeFoodMessages() {
         System.out.println("'entry' to add food to logs");
         System.out.println("'favs' to add food to favourites");
@@ -665,6 +739,8 @@ public class MacroTracker {
         System.out.println("'home' to go back to home page");
     }
 
+    // MODIFIES: this
+    // EFFECTS: processes command for where to add the food
     private void addFood(Food food) {
         String command = scanner.nextLine();
         boolean valid = false;
@@ -690,6 +766,7 @@ public class MacroTracker {
         newFood();
     }
 
+    // EFFECTS: creates a new food item
     private void makeFoodItem() {
         FoodItem foodItem = makeFood();
         makeFoodMessages();
