@@ -8,7 +8,8 @@ import java.util.Scanner;
 import static javafx.application.Platform.exit;
 
 /**
- * MacroTracker is the ui class that allows for user interaction. Used the TellerApp
+ * MacroTracker represents the console interaction of the project and is the ui class that allows for user interaction.
+ * Used the TellerApp for reference.
  */
 public class MacroTracker {
 
@@ -131,9 +132,10 @@ public class MacroTracker {
         System.out.println("Name: " + user.getName());
         System.out.println("Weight: " + user.getWeight());
         System.out.println("Weight Goal: " + user.getJournal().getGoal());
-        System.out.println("Macro Goals: " + user.getMacrosNeeded().getCalories() + " calories, "
-                + user.getMacrosNeeded().getProtein() + " grams of protein, " + user.getMacrosNeeded().getCarbs()
-                + " grams of carbohydrates, and " + user.getMacrosNeeded().getFat() + " grams of fat");
+        System.out.println("Macro Goals: " + (int) user.getMacrosNeeded().getCalories() + " calories, "
+                + (int) user.getMacrosNeeded().getProtein() + " grams of protein, "
+                + (int) user.getMacrosNeeded().getCarbs() + " grams of carbohydrates, and "
+                + (int) user.getMacrosNeeded().getFat() + " grams of fat");
 
         System.out.println("\n'update' to change personal info");
         System.out.println("'back' to go back");
@@ -219,6 +221,7 @@ public class MacroTracker {
             }
         }
         System.out.println("Change successfully made!");
+        updateInfoMessages();
         updateInfo();
     }
 
@@ -241,6 +244,7 @@ public class MacroTracker {
             }
         }
         System.out.println("Change successfully made!");
+        updateInfoMessages();
         updateInfo();
     }
 
@@ -252,6 +256,7 @@ public class MacroTracker {
         String name = scanner.nextLine();
         user.setName(name);
         System.out.println("Change successfully made!");
+        updateInfoMessages();
         updateInfo();
     }
 
@@ -260,22 +265,22 @@ public class MacroTracker {
         if (user.metCalorieGoals()) {
             System.out.println("You have reached your calorie goals!");
         } else {
-            System.out.println("You need " + calories + " more calories for today!");
+            System.out.println("You need " + (int) calories + " more calories for today!");
         }
         if (user.metProteinGoals()) {
             System.out.println("You have reached your protein goals!");
         } else {
-            System.out.println("You need " + protein + " more grams of protein for today!");
+            System.out.println("You need " + (int) protein + " more grams of protein for today!");
         }
         if (user.metCarbGoals()) {
             System.out.println("You have reached your carbohydrates goals!");
         } else {
-            System.out.println("You need " + carbs + " more grams of carbohydrates for today!");
+            System.out.println("You need " + (int) carbs + " more grams of carbohydrates for today!");
         }
         if (user.metFatGoals()) {
             System.out.println("You have reached your fat goals!");
         } else {
-            System.out.println("You need " + fat + " more grams of fat for today!");
+            System.out.println("You need " + (int) fat + " more grams of fat for today!");
         }
     }
 
