@@ -87,7 +87,7 @@ public class DayLog {
     public List<Food> getFoodAtTime(String timeOfDay) {
         List<Food> foodAtTime = new ArrayList<>();
         for (Entry entry : entries) {
-            if (entry.getTimeOfDay() == timeOfDay) {
+            if (entry.getTimeOfDay().equals(timeOfDay)) {
                 foodAtTime.add(entry.getFood());
             }
         }

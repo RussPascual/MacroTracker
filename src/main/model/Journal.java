@@ -76,17 +76,9 @@ public class Journal {
     // REQUIRES: this must have content
     // EFFECTS: returns the weight change progress so far as a percentage
     public double viewProgress() {
-        double changeSoFar = getTotalChange();
+        double changeSoFar = weightTracker.get(weightTracker.size() - 1) - weightTracker.get(0);
         double changeGoal = goal - weightTracker.get(0);
         return (changeSoFar / changeGoal) * 100;
-    }
-
-    // REQUIRES: this must have content
-    // EFFECTS: returns the total weight change so far
-    public double getTotalChange() {
-        double starting = weightTracker.get(0);
-        double current = weightTracker.get(weightTracker.size() - 1);
-        return current - starting;
     }
 
     // EFFECTS: returns the remaining change needed

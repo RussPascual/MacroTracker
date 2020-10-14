@@ -27,11 +27,21 @@ public class JournalTest {
     }
 
     @Test
+    public void testSetGoal() {
+        journal.setGoal(200);
+        assertEquals(200, journal.getGoal());
+    }
+
+    @Test
     public void testNextDay() {
         journal.nextDay(150.4);
         assertEquals(1, journal.getLogs().size());
-        assertEquals(150.4, journal.getLog(1).getWeight());
+        assertEquals(150.4, journal.getLastLog().getWeight());
         assertEquals(1, journal.getLastLog().getDay());
+        journal.nextDay(151);
+        assertEquals(2, journal.getLogs().size());
+        assertEquals(151, journal.getLastLog().getWeight());
+        assertEquals(2, journal.getLastLog().getDay());
     }
 
     @Test

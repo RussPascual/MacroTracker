@@ -25,6 +25,12 @@ public class UserTest {
     }
 
     @Test
+    public void testSetName() {
+        user.setName("Russ");
+        assertEquals("Russ", user.getName());
+    }
+
+    @Test
     public void testSetMacroGoals() {
         user.setMacroGoals(2800, 25, 55, 20);
         assertEquals((2800 * 0.25) / 4, user.getMacrosNeeded().getProtein());
