@@ -5,6 +5,8 @@ import model.*;
 import java.util.List;
 import java.util.Scanner;
 
+import static javafx.application.Platform.exit;
+
 /**
  * MacroTracker is the ui class that allows for user interaction. Used the TellerApp
  */
@@ -31,21 +33,64 @@ public class MacroTracker {
     private void init() {
         System.out.println("What's your name?");
         String name = scanner.nextLine();
-
         System.out.println("What's your current weight?");
         double weight = scanner.nextDouble();
         scanner.nextLine();
-
         System.out.println("What's your weight goal?");
         double weightGoal = scanner.nextDouble();
         scanner.nextLine();
-
         user = new User(name, weight, weightGoal);
+        setMacroGoals();
+        user.getJournal().nextDay(weight);
+    }
+
+    // EFFECTS: returns the calories selected by user
+    private double selectCalories() {
+        double calories = 0;
+        System.out.println("How many calories do you need in a day?");
+        double command = scanner.nextDouble();
+        scanner.nextLine();
+        boolean valid = false;
+        while (!valid) {
+            if (command >= 0) {
+                valid = true;
+                calories = command;
+            } else {
+                System.out.println("Input is invalid! Please try again!");
+            }
+        }
+        return calories;
+    }
+
+    // MODIFIES: this
+    // EFFECTS: sets the macro goals based on the calories input
+    private void setMacroGoals() {
+        double calories = selectCalories();
+        boolean valid = false;
+        while (!valid) {
+            System.out.println("Ensuring that protein % + carbohydrates % + fat % = 100%");
+            System.out.println("What percentage of your calories should be protein?");
+            double protein = scanner.nextDouble();
+            scanner.nextLine();
+            System.out.println("What percentage of your calories should be carbohydrates?");
+            double carbs = scanner.nextDouble();
+            scanner.nextLine();
+            System.out.println("What percentage of your calories should be fat?");
+            double fat = scanner.nextDouble();
+            scanner.nextLine();
+            if (protein >= 0 && carbs >= 0 && fat >= 0 && protein + carbs + fat == 100) {
+                valid = true;
+                user.setMacroGoals(calories, protein, carbs, fat);
+                System.out.println("Macro goals have successfully been set!");
+            } else {
+                System.out.println("At least one of the values inputted was invalid! Please try again!");
+            }
+        }
     }
 
     // EFFECTS: displays the various options available to the user
     private void displayOptions() {
-        System.out.println("'info' to update your information");
+        System.out.println("\n'info' to update your information");
         System.out.println("'prog' to view your progress");
         System.out.println("'favs' to view your favourites");
         System.out.println("'logs' to access your journal logs");
@@ -59,7 +104,6 @@ public class MacroTracker {
         displayOptions();
         String command = scanner.nextLine();
         boolean valid = false;
-
         while (!valid) {
             valid = true;
             if (command.equals("info")) {
@@ -73,7 +117,7 @@ public class MacroTracker {
             } else if (command.equals("food")) {
                 newFood();
             } else if (command.equals("quit")) {
-                System.out.println("Shutting down ...");
+                exit();
             } else {
                 valid = false;
                 System.out.println("Input was not one of the options! Please try again!");
@@ -87,8 +131,11 @@ public class MacroTracker {
         System.out.println("Name: " + user.getName());
         System.out.println("Weight: " + user.getWeight());
         System.out.println("Weight Goal: " + user.getJournal().getGoal());
+        System.out.println("Macro Goals: " + user.getMacrosNeeded().getCalories() + " calories, "
+                + user.getMacrosNeeded().getProtein() + " grams of protein, " + user.getMacrosNeeded().getCarbs()
+                + " grams of carbohydrates, and " + user.getMacrosNeeded().getFat() + " grams of fat");
 
-        System.out.println("'update' to change personal info");
+        System.out.println("\n'update' to change personal info");
         System.out.println("'back' to go back");
         System.out.println("'home' to go back to home page");
     }
@@ -102,6 +149,7 @@ public class MacroTracker {
         while (!valid) {
             valid = true;
             if (command.equals("update")) {
+                updateInfoMessages();
                 updateInfo();
             } else if (command.equals("back") || command.equals("home")) {
                 processCommand();
@@ -116,9 +164,10 @@ public class MacroTracker {
 
     // EFFECTS: prints the options for updating user information
     private void updateInfoMessages() {
-        System.out.println("'name' to update name");
+        System.out.println("\n'name' to update name");
         System.out.println("'weight' to update weight");
         System.out.println("'goal' to update weight goal");
+        System.out.println("'macro' to update macro goals");
         System.out.println("'back' to go back");
         System.out.println("'home' to go back to home page");
     }
@@ -126,7 +175,6 @@ public class MacroTracker {
     // MODIFIES: this
     // EFFECTS: processes user command for updating user information
     private void updateInfo() {
-        updateInfoMessages();
         String command = scanner.nextLine();
         boolean valid = false;
         while (!valid) {
@@ -137,6 +185,8 @@ public class MacroTracker {
                 changeWeight();
             } else if (command.equals("goal")) {
                 changeGoal();
+            } else if (command.equals("macro")) {
+                setMacroGoals();
             } else if (command.equals("back")) {
                 information();
             } else if (command.equals("home")) {
@@ -183,7 +233,7 @@ public class MacroTracker {
         while (!valid) {
             if (weight > 0) {
                 valid = true;
-                user.setWeight(weight);
+                user.updateWeight(weight);
             } else {
                 System.out.println("Input was invalid! Please try again!");
                 weight = scanner.nextDouble();
@@ -205,22 +255,45 @@ public class MacroTracker {
         updateInfo();
     }
 
+    // EFFECTS: prints macro progress depending on progress
+    private void macroProgressMessages(double calories, double protein, double carbs, double fat) {
+        if (user.metCalorieGoals()) {
+            System.out.println("You have reached your calorie goals!");
+        } else {
+            System.out.println("You need " + calories + " more calories for today!");
+        }
+        if (user.metProteinGoals()) {
+            System.out.println("You have reached your protein goals!");
+        } else {
+            System.out.println("You need " + protein + " more grams of protein for today!");
+        }
+        if (user.metCarbGoals()) {
+            System.out.println("You have reached your carbohydrates goals!");
+        } else {
+            System.out.println("You need " + carbs + " more grams of carbohydrates for today!");
+        }
+        if (user.metFatGoals()) {
+            System.out.println("You have reached your fat goals!");
+        } else {
+            System.out.println("You need " + fat + " more grams of fat for today!");
+        }
+    }
+
+    // EFFECTS: prints the macro progress for the day
+    private void macroProgress() {
+        Macros macros = user.remainingMacros();
+        double caloriesToGo = macros.getCalories();
+        double proteinToGo = macros.getProtein();
+        double carbsToGo = macros.getCarbs();
+        double fatToGo = macros.getFat();
+        macroProgressMessages(caloriesToGo, proteinToGo, carbsToGo, fatToGo);
+    }
+
     // EFFECTS: prints the user's progress if there is any
     private void progress() {
-        if (!user.getJournal().getLogs().isEmpty()) {
-            double weightProgress = user.getJournal().viewProgress();
-            double caloriesToGo = user.getMacrosNeeded().getCalories();
-            double proteinToGo = user.getMacrosNeeded().getProtein();
-            double carbsToGo = user.getMacrosNeeded().getCarbs();
-            double fatToGo = user.getMacrosNeeded().getFat();
-            System.out.println("You are " + weightProgress + "% of the way towards your goal!");
-            System.out.println("You need " + caloriesToGo + " more calories for today!");
-            System.out.println("You need " + proteinToGo + " more grams of protein for today!");
-            System.out.println("You need " + carbsToGo + " more grams of carbohydrates for today!");
-            System.out.println("You need " + fatToGo + " more grams of fat for today!");
-        } else {
-            System.out.println("No records available! Try making a new entry first!");
-        }
+        double weightProgress = user.getJournal().viewProgress();
+        System.out.println("You are " + weightProgress + "% of the way towards your goal!");
+        macroProgress();
         processCommand();
     }
 
@@ -279,7 +352,7 @@ public class MacroTracker {
     // EFFECTS: processes user command for favourites
     private void viewFavourites() {
         displayFavourites();
-        System.out.println("'add' to add a favourite food to current day's logs");
+        System.out.println("\n'add' to add a favourite food to current day's logs");
         System.out.println("'back' to go back");
         System.out.println("'home' to go back to home page");
         String command = scanner.nextLine();
@@ -287,7 +360,6 @@ public class MacroTracker {
         while (!valid) {
             valid = true;
             if (command.equals("add")) {
-                System.out.println("Type the name of the food you want to add!");
                 selectFoodToAdd();
             } else if (command.equals("back")) {
                 favourites();
@@ -305,22 +377,25 @@ public class MacroTracker {
     // MODIFIES: this
     // EFFECTS: adds a food from favourites to logs as an entry
     private void selectFoodToAdd() {
-        String command = scanner.nextLine();
-        int hour;
-        boolean valid = false;
-        while (!valid) {
-            if (user.getSaved().getFood(command) == null) {
-                System.out.println("Food selected was not one of the options! Please try again!");
-                command = scanner.nextLine();
-            } else {
-                valid = true;
-                Food selectedFood = user.getSaved().getFood(command);
-                hour = timeOfEntry();
-                user.getJournal().addEntry(new Entry(selectedFood, hour));
+        if (!user.getSaved().getFoods().isEmpty()) {
+            System.out.println("Type the name of the food you want to add!");
+            String command = scanner.nextLine();
+            int hour;
+            boolean valid = false;
+            while (!valid) {
+                if (user.getSaved().getFood(command) == null) {
+                    System.out.println("Food selected was not one of the options! Please try again!");
+                    command = scanner.nextLine();
+                } else {
+                    valid = true;
+                    Food selectedFood = user.getSaved().getFood(command);
+                    hour = timeOfEntry();
+                    user.getJournal().addEntry(new Entry(selectedFood, hour));
+                    macroProgress();
+                }
             }
+            System.out.println("Entry successfully added!");
         }
-        System.out.println("Entry successfully added!");
-        viewFavourites();
     }
 
     // EFFECTS: returns a created food item
@@ -351,7 +426,7 @@ public class MacroTracker {
 
     // EFFECTS: prints the options for the user's journal
     private void journalMessages() {
-        System.out.println("'new' to start a new day's logs");
+        System.out.println("\n'new' to start a new day's logs");
         System.out.println("'today' to view today's logs");
         System.out.println("'other' to view another day's logs");
         System.out.println("'back' to go back");
@@ -368,9 +443,9 @@ public class MacroTracker {
             valid = true;
             if (command.equals("new")) {
                 newLog();
-            } else if (command.equals("today") && !user.getJournal().getLogs().isEmpty()) {
-                dayLog(user.getJournal().getLogs().size() - 1);
-            } else if (command.equals("other") && !user.getJournal().getLogs().isEmpty()) {
+            } else if (command.equals("today")) {
+                dayLog(user.getJournal().getLogs().size());
+            } else if (command.equals("other")) {
                 selectLog();
             } else if (command.equals("back") || command.equals("home")) {
                 processCommand();
@@ -425,7 +500,7 @@ public class MacroTracker {
 
     // EFFECTS: prints the options for a day log
     private void dayLogMessages() {
-        System.out.println("'food' to view food entries");
+        System.out.println("\n'food' to view food entries");
         System.out.println("'note' to view notes");
         System.out.println("'back' to go back");
         System.out.println("'home' to go back to home page");
@@ -442,8 +517,10 @@ public class MacroTracker {
         while (!valid) {
             valid = true;
             if (command.equals("food")) {
+                foodLogMessages(log);
                 foodLog(log, day);
             } else if (command.equals("note")) {
+                noteLogMessages(log);
                 noteLog(log, day);
             } else if (command.equals("back")) {
                 journal();
@@ -469,7 +546,11 @@ public class MacroTracker {
         } else {
             System.out.println("You have no notes for today");
         }
-        System.out.println("'add' to add a note");
+    }
+
+    // EFFECTS: prints the options for editing notes in a log
+    private void noteLogOptions() {
+        System.out.println("\n'add' to add a note");
         System.out.println("'remove' to remove a note");
         System.out.println("'back' to go back");
         System.out.println("'home' to go back to home page");
@@ -477,9 +558,9 @@ public class MacroTracker {
 
     // REQUIRES: day > 0 && day <= size of this
     // MODIFIES: this
-    // EFFECTS: processes user command for notes in a log
+    // EFFECTS: processes user command for editing notes in a log
     private void noteLog(DayLog log, int day) {
-        noteLogMessages(log);
+        noteLogOptions();
         String command = scanner.nextLine();
         boolean valid = false;
         while (!valid) {
@@ -509,6 +590,7 @@ public class MacroTracker {
     // EFFECTS: removes a note from the logs if any
     private void removeNote(DayLog log, int day) {
         if (!log.getNotes().isEmpty()) {
+            noteLogMessages(log);
             System.out.println("Which note would you like to remove? Input the position from the top!");
             int position = scanner.nextInt();
             scanner.nextLine();
@@ -530,17 +612,21 @@ public class MacroTracker {
         noteLog(log, day);
     }
 
-    // EFFECTS: prints the user's entries for the day and the options for modifying the logs
+    // EFFECTS: prints the user's entries for the day
     private void foodLogMessages(DayLog log) {
         if (!log.getEntries().isEmpty()) {
             System.out.println("Entries: ");
             for (Entry entry : log.getEntries()) {
-                System.out.println("\t - " + entry.getFood() + " eaten at hour " + entry.getHour());
+                System.out.println("\t - " + entry.getFood().getName() + " eaten at hour " + entry.getHour());
             }
         } else {
             System.out.println("Log is empty! Please add an entry first!");
         }
-        System.out.println("'add' to add a new entry");
+    }
+
+    // EFFECTS: prints the options for editing the food log
+    private void foodLogOptions() {
+        System.out.println("\n'add' to add a new entry");
         System.out.println("'remove' to remove an entry");
         System.out.println("'back' to go back");
         System.out.println("'home' to go back to home page");
@@ -548,9 +634,9 @@ public class MacroTracker {
 
     // REQUIRES: day > 0 && day <= size of this
     // MODIFIES: this
-    // EFFECTS: processes user command for the food log chosen
+    // EFFECTS: processes user command for editing the food log
     private void foodLog(DayLog log, int day) {
-        foodLogMessages(log);
+        foodLogOptions();
         String command = scanner.nextLine();
         boolean valid = false;
         while (!valid) {
@@ -558,7 +644,6 @@ public class MacroTracker {
             if (command.equals("add")) {
                 addEntry(log, day);
             } else if (command.equals("remove")) {
-                System.out.println("Which entry would you like to remove? Input the position from the top!");
                 removeEntry(log, day);
             } else if (command.equals("back")) {
                 dayLog(day);
@@ -575,7 +660,7 @@ public class MacroTracker {
 
     // EFFECTS: prints the options for adding an entry
     private void addEntryMessages() {
-        System.out.println("'new' to create a new entry");
+        System.out.println("\n'new' to create a new entry");
         System.out.println("'favs' to add an entry from your favourites");
         System.out.println("'back' to go back");
         System.out.println("'home' to go back to home page");
@@ -593,9 +678,9 @@ public class MacroTracker {
             if (command.equals("new")) {
                 Entry entry = makeEntry();
                 log.addEntry(entry);
+                macroProgress();
             } else if (command.equals("favs")) {
                 displayFavourites();
-                System.out.println("Type the name of the food you want to add!");
                 selectFoodToAdd();
             } else if (command.equals("back")) {
                 foodLog(log, day);
@@ -644,6 +729,8 @@ public class MacroTracker {
     // EFFECTS: removes an entry if any
     private void removeEntry(DayLog log, int day) {
         if (!log.getEntries().isEmpty()) {
+            foodLogMessages(log);
+            System.out.println("Which entry would you like to remove? Input the position from the top!");
             int position = scanner.nextInt();
             scanner.nextLine();
             boolean valid = false;
@@ -657,6 +744,8 @@ public class MacroTracker {
                     scanner.nextLine();
                 }
             }
+            System.out.println("Entry was successfully removed!");
+            macroProgress();
         } else {
             System.out.println("Log is empty! There are no entries to remove!");
         }
@@ -665,7 +754,7 @@ public class MacroTracker {
 
     // EFFECTS: prints the options for creating a new food
     private void newFoodMessages() {
-        System.out.println("'item' to create a new food item (ex. white rice)");
+        System.out.println("\n'item' to create a new food item (ex. white rice)");
         System.out.println("'meal' to create a new meal (ex. fried rice)");
         System.out.println("'back' to go back");
         System.out.println("'home' to go back to home page");
@@ -733,7 +822,7 @@ public class MacroTracker {
 
     // EFFECTS: prints the options for where to add the food
     private void makeFoodMessages() {
-        System.out.println("'entry' to add food to logs");
+        System.out.println("\n'entry' to add food to logs");
         System.out.println("'favs' to add food to favourites");
         System.out.println("'back' to go back");
         System.out.println("'home' to go back to home page");
@@ -750,6 +839,7 @@ public class MacroTracker {
                 int hour = timeOfEntry();
                 user.getJournal().addEntry(new Entry(food, hour));
                 System.out.println("Successfully added entry to your logs!");
+                macroProgress();
             } else if (command.equals("favs")) {
                 user.addFavourite(food);
                 System.out.println("Successfully added food to favourites!");

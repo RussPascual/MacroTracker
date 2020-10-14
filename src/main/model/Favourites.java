@@ -24,7 +24,7 @@ public class Favourites {
     // EFFECTS: returns the food whose name was passed or null if it cannot be found
     public Food getFood(String foodName) {
         for (Food food : foods) {
-            if (food.getName() == foodName.toLowerCase()) {
+            if (food.getName().equals(foodName.toLowerCase())) {
                 return food;
             }
         }

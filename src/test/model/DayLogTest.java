@@ -78,7 +78,7 @@ public class DayLogTest {
         assertEquals(1, dayLog.getNotes().size());
         assertTrue(dayLog.getNotes().contains(note));
 
-        dayLog.removeEntry(1);
+        dayLog.removeNote(1);
         assertTrue(dayLog.getNotes().isEmpty());
     }
 

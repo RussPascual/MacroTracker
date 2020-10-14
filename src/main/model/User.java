@@ -48,14 +48,6 @@ public class User {
         this.name = name;
     }
 
-    public void setWeight(double weight) {
-        this.weight = weight;
-    }
-
-    public void setMacrosNeeded(Macros macrosNeeded) {
-        this.macrosNeeded = macrosNeeded;
-    }
-
     // REQUIRES: protein, carbs, and fat must add up to 100
     // MODIFIES: this
     // EFFECTS: sets macrosNeeded to the calorie input and the protein, carbs, and fat inputs
@@ -70,20 +62,6 @@ public class User {
         double fatGrams = fatCalories / 9.0;
 
         macrosNeeded.updateMacros(proteinGrams, carbohydratesGrams, fatGrams, calories);
-    }
-
-    // REQUIRES: time is within [0, 23]
-    // MODIFIES: this
-    // EFFECTS: adds an entry to the current day
-    public void addEntry(Food food, int time) {
-        Entry newEntry = new Entry(food, time);
-        journal.addEntry(newEntry);
-    }
-
-    // MODIFIES: this
-    // EFFECTS: adds a note to the current day
-    public void addNote(String note) {
-        journal.getLastLog().addNote(note);
     }
 
     // MODIFIES: this
@@ -135,11 +113,18 @@ public class User {
     // EFFECTS: returns the remaining macros needed for the day
     public Macros remainingMacros() {
         Macros currentMacros = journal.getLastLog().totalMacros();
-
         double protein = macrosNeeded.getProtein() - currentMacros.getProtein();
         double carbs = macrosNeeded.getCarbs() - currentMacros.getCarbs();
         double fat = macrosNeeded.getFat() - currentMacros.getFat();
-
+        if (protein < 0) {
+            protein = 0;
+        }
+        if (carbs < 0) {
+            carbs = 0;
+        }
+        if (fat < 0) {
+            fat = 0;
+        }
         Macros remainingMacros = new Macros(protein, carbs, fat);
         return remainingMacros;
     }
