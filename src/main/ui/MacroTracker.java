@@ -297,7 +297,7 @@ public class MacroTracker {
     // EFFECTS: prints the user's progress if there is any
     private void progress() {
         double weightProgress = user.getJournal().viewProgress();
-        System.out.println("You are " + weightProgress + "% of the way towards your goal!");
+        System.out.println("You are " + (int) weightProgress + "% of the way towards your goal!");
         macroProgress();
         processCommand();
     }
