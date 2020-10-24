@@ -159,4 +159,13 @@ public class UserTest {
         assertEquals(161.2, user.getWeight());
         assertEquals(161.2, user.getJournal().getLastLog().getWeight());
     }
+
+    @Test
+    public void testUpdateMacros() {
+        user.updateMacros(1, 2, 3, 4);
+        assertEquals(1, user.getMacrosNeeded().getProtein());
+        assertEquals(2, user.getMacrosNeeded().getCarbs());
+        assertEquals(3, user.getMacrosNeeded().getFat());
+        assertEquals(4, user.getMacrosNeeded().getCalories());
+    }
 }

@@ -48,6 +48,13 @@ public class User {
         this.name = name;
     }
 
+    // REQUIRES: input must all be non-negative
+    // MODIFIES: this
+    // EFFECTS: updates all the macro values to input
+    public void updateMacros(double protein, double carbohydrates, double fat, double calories) {
+        macrosNeeded.updateMacros(protein, carbohydrates, fat, calories);
+    }
+
     // REQUIRES: protein, carbs, and fat must add up to 100
     // MODIFIES: this
     // EFFECTS: sets macrosNeeded to the calorie input and the protein, carbs, and fat inputs
@@ -125,8 +132,7 @@ public class User {
         if (fat < 0) {
             fat = 0;
         }
-        Macros remainingMacros = new Macros(protein, carbs, fat);
-        return remainingMacros;
+        return new Macros(protein, carbs, fat);
     }
 
     // REQUIRES: weight > 0

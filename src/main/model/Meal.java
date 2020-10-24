@@ -12,7 +12,7 @@ public class Meal extends Food {
 
     // EFFECTS: constructs an empty meal
     public Meal(String name) {
-        super(name, new Macros());
+        super(name, new Macros(), true);
         this.ingredients = new ArrayList<>();
     }
 

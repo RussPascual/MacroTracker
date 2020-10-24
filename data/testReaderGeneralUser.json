@@ -1,0 +1,117 @@
+{
+  "name": "Russell",
+  "weight": 164,
+  "macrosNeeded": {
+    "calories": 1440,
+    "protein": 90,
+    "carbs": 180,
+    "fat": 40
+  },
+  "journal": {
+    "goal": 180,
+    "logs": [
+      {
+        "day": 1,
+        "entries": [
+          {
+            "hour": 8,
+            "food": {
+              "name": "egg",
+              "isMeal": false,
+              "macros": {
+                "protein": 10,
+                "carbs": 8,
+                "fat": 0
+              }
+            }
+          },
+          {
+            "hour": 12,
+            "food": {
+              "name": "fried rice",
+              "isMeal": true,
+              "ingredients": [
+                {
+                  "name": "rice",
+                  "macros": {
+                    "protein": 2,
+                    "carbs": 20,
+                    "fat": 0
+                  }
+                },
+                {
+                  "name": "pork",
+                  "macros": {
+                    "protein": 12,
+                    "carbs": 20,
+                    "fat": 4
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "notes": [
+        ],
+        "weight": 162
+      },
+      {
+        "day": 2,
+        "entries": [
+        ],
+        "notes": [
+          {
+            "note": "fill later"
+          },
+          {
+            "note": "eat a lot!"
+          }
+        ],
+        "weight": 164
+      }
+    ]
+  },
+  "saved": {
+    "favourites": [
+      {
+        "name": "banana",
+        "isMeal": false,
+        "macros": {
+          "protein": 0,
+          "carbs": 15,
+          "fat": 0
+        }
+      },
+      {
+        "name": "spaghetti and meatballs",
+        "isMeal": true,
+        "ingredients": [
+          {
+            "name": "noodles",
+            "macros": {
+              "protein": 2,
+              "carbs": 25,
+              "fat": 0
+            }
+          },
+          {
+            "name": "spaghetti sauce",
+            "macros": {
+              "protein": 5,
+              "carbs": 15,
+              "fat": 2
+            }
+          },
+          {
+            "name": "meatballs",
+            "macros": {
+              "protein": 12,
+              "carbs": 10,
+              "fat": 3
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

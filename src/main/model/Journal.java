@@ -68,7 +68,7 @@ public class Journal {
     // MODIFIES: this
     // EFFECTS: sets the latest weight to the input
     public void updateWeight(double weight) {
-        logs.get(logs.size() - 1).setWeight(weight);
+        getLastLog().setWeight(weight);
         weightTracker.remove(weightTracker.size() - 1);
         weightTracker.add(weight);
     }

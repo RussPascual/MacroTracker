@@ -8,11 +8,13 @@ public abstract class Food {
 
     private String name;
     private Macros macros;
+    private boolean isMeal;
 
     // EFFECTS: constructs a food item
-    public Food(String name, Macros macros) {
+    public Food(String name, Macros macros, boolean isMeal) {
         this.name = name.toLowerCase();
         this.macros = macros;
+        this.isMeal = isMeal;
     }
 
     // EFFECTS: returns the name of the food
@@ -43,6 +45,14 @@ public abstract class Food {
     // EFFECTS: returns the calories of the food
     public double getCalories() {
         return macros.getCalories();
+    }
+
+    public boolean isMeal() {
+        return isMeal;
+    }
+
+    public void setMacros(Macros macros) {
+        this.macros = macros;
     }
 
     // MODIFIES: this

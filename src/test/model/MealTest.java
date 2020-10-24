@@ -26,6 +26,7 @@ public class MealTest {
     @Test
     public void testMeal() {
         assertEquals("burger", meal.getName());
+        assertTrue(meal.isMeal());
         assertTrue(meal.getIngredients().isEmpty());
     }
 
