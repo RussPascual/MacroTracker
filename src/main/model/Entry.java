@@ -1,5 +1,7 @@
 package model;
 
+import org.json.JSONObject;
+
 /**
  * An Entry represents a user's input of food eaten and time eaten
  */
@@ -43,5 +45,12 @@ public class Entry {
         } else {
             return "Evening";
         }
+    }
+
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("hour", hour);
+        json.put("food", food.toJson());
+        return json;
     }
 }

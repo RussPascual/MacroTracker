@@ -1,5 +1,8 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,5 +36,23 @@ public class Meal extends Food {
     public void removeIngredient(FoodItem food) {
         ingredients.remove(food);
         super.removeMacros(food);
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = super.toJson();
+        json.put("ingredients", ingredientsToJson());
+        return json;
+    }
+
+    // EFFECTS: adds each ingredient to json array and returns the array
+    private JSONArray ingredientsToJson() {
+        JSONArray jsonArray = new JSONArray();
+
+        for (FoodItem i : ingredients) {
+            jsonArray.put(i.toJson());
+        }
+
+        return jsonArray;
     }
 }

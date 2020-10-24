@@ -1,5 +1,7 @@
 package model;
 
+import org.json.JSONObject;
+
 /**
  * Food can be either a single food item or a meal. Food represents the food recorded as an entry and contains
  * information on its macros as well
@@ -65,5 +67,12 @@ public abstract class Food {
     // EFFECTS: removes input's macros from meal's macros
     public void removeMacros(FoodItem foodItem) {
         macros.removeMacros(foodItem.getMacros());
+    }
+
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("name", name);
+        json.put("macros", macros.toJson());
+        return json;
     }
 }

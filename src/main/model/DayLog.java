@@ -1,5 +1,8 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -101,5 +104,38 @@ public class DayLog {
             macros.addMacros(entry.getMacros());
         }
         return macros;
+    }
+
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("day", day);
+        json.put("entries", entriesToJson());
+        json.put("notes", notesToJson());
+        json.put("weight", weight);
+        return json;
+    }
+
+    // EFFECTS: adds each note to a json array and returns the array
+    private JSONArray notesToJson() {
+        JSONArray jsonArray = new JSONArray();
+
+        for (String s : notes) {
+            JSONObject json = new JSONObject();
+            json.put("note", s);
+            jsonArray.put(json);
+        }
+
+        return jsonArray;
+    }
+
+    // EFFECTS: adds each entry to a json array and returns the array
+    private JSONArray entriesToJson() {
+        JSONArray jsonArray = new JSONArray();
+
+        for (Entry e : entries) {
+            jsonArray.put(e.toJson());
+        }
+
+        return jsonArray;
     }
 }

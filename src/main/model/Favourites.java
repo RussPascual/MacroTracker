@@ -1,5 +1,8 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,5 +47,22 @@ public class Favourites {
     // EFFECTS: removes food from foods
     public void removeFood(Food food) {
         foods.remove(food);
+    }
+
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("favourites", favouritesToJson());
+        return json;
+    }
+
+    // EFFECTS: adds each food to a json array and returns the array
+    private JSONArray favouritesToJson() {
+        JSONArray jsonArray = new JSONArray();
+
+        for (Food f : foods) {
+            jsonArray.put(f.toJson());
+        }
+
+        return jsonArray;
     }
 }

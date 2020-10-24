@@ -1,5 +1,7 @@
 package model;
 
+import org.json.JSONObject;
+
 /**
  * Macros represents the macronutrients in every food. Each of protein, carbs, and fat are measured in grams
  * and have their own caloric value of 4 calories per gram of protein or carb and 9 calories per gram of fat
@@ -78,5 +80,14 @@ public class Macros {
         this.carbohydrates = carbohydrates;
         this.fat = fat;
         this.calories = calories;
+    }
+
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("calories", calories);
+        json.put("protein", protein);
+        json.put("carbs", carbohydrates);
+        json.put("fat", fat);
+        return json;
     }
 }

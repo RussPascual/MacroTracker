@@ -1,5 +1,7 @@
 package model;
 
+import org.json.JSONObject;
+
 import java.util.Date;
 import java.util.List;
 
@@ -143,5 +145,15 @@ public class User {
         if (!journal.getLogs().isEmpty()) {
             journal.updateWeight(weight);
         }
+    }
+
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("name", name);
+        json.put("weight", weight);
+        json.put("macrosNeeded", macrosNeeded.toJson());
+        json.put("journal", journal.toJson());
+        json.put("saved", saved.toJson());
+        return json;
     }
 }

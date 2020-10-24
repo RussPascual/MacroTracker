@@ -1,5 +1,8 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,5 +94,23 @@ public class Journal {
     // EFFECTS: updates the most recent day's logs with a new entry
     public void addEntry(Entry entry) {
         logs.get(logs.size() - 1).addEntry(entry);
+    }
+
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("goal", goal);
+        json.put("logs", logsToJson());
+        return json;
+    }
+
+    // EFFECTS: adds each log to a json array and returns the array
+    private JSONArray logsToJson() {
+        JSONArray jsonArray = new JSONArray();
+
+        for (DayLog l : logs) {
+            jsonArray.put(l.toJson());
+        }
+
+        return jsonArray;
     }
 }
