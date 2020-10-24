@@ -1,7 +1,12 @@
 package ui;
 
 import model.*;
+import org.json.JSONObject;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -9,16 +14,22 @@ import static javafx.application.Platform.exit;
 
 /**
  * MacroTracker represents the console interaction of the project and is the ui class that allows for user interaction.
- * Used the TellerApp for reference.
+ * Used the TellerApp from https://github.students.cs.ubc.ca/CPSC210/TellerApp for reference.
+ * Used the JsonSerializationDemo from https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo for reference.
  */
 public class MacroTracker {
 
+    private static final String JSON_FILE = "./data/user.json";
     private User user;
     private Scanner scanner;
+    private JsonReader reader;
+    private JsonWriter writer;
 
     // EFFECTS: initializes scanner and starts the application
     public MacroTracker() {
         scanner = new Scanner(System.in);
+        reader = new JsonReader(JSON_FILE);
+        writer = new JsonWriter(JSON_FILE);
         runTracker();
     }
 
@@ -96,6 +107,7 @@ public class MacroTracker {
         System.out.println("'favs' to view your favourites");
         System.out.println("'logs' to access your journal logs");
         System.out.println("'food' to create a new food item or meal");
+        System.out.println("'data' to access data options (save / load)");
         System.out.println("'quit' to quit");
     }
 
@@ -104,27 +116,79 @@ public class MacroTracker {
     private void processCommand() {
         displayOptions();
         String command = scanner.nextLine();
+        if (command.equals("info")) {
+            information();
+        } else if (command.equals("prog")) {
+            progress();
+        } else if (command.equals("favs")) {
+            favourites();
+        } else if (command.equals("logs")) {
+            journal();
+        } else if (command.equals("food")) {
+            newFood();
+        } else if (command.equals("data")) {
+            data();
+        } else if (command.equals("quit")) {
+            exit();
+        } else {
+            System.out.println("Input was not one of the options! Please try again!");
+            processCommand();
+        }
+    }
+
+    // EFFECTS: provides options for managing data
+    private void dataOptions() {
+        System.out.println("\n'save' to save current data");
+        System.out.println("'load' to load data on file");
+    }
+
+    // MODIFIES: this
+    // EFFECTS: processes user command for data
+    private void data() {
+        dataOptions();
+        String command = scanner.nextLine();
         boolean valid = false;
         while (!valid) {
             valid = true;
-            if (command.equals("info")) {
-                information();
-            } else if (command.equals("prog")) {
-                progress();
-            } else if (command.equals("favs")) {
-                favourites();
-            } else if (command.equals("logs")) {
-                journal();
-            } else if (command.equals("food")) {
-                newFood();
-            } else if (command.equals("quit")) {
-                exit();
+            if (command.equals("save")) {
+                saveData();
+            } else if (command.equals("load")) {
+                loadData();
+            } else if (command.equals("back") || command.equals("home")) {
+                processCommand();
             } else {
                 valid = false;
                 System.out.println("Input was not one of the options! Please try again!");
                 command = scanner.nextLine();
             }
         }
+        processCommand();
+    }
+
+    // MODIFIES: this
+    // EFFECTS: loads user data from file
+    private void loadData() {
+        try {
+            user = reader.read();
+            System.out.println("Loaded " + user.getName() + "'s data from " + JSON_FILE);
+        } catch (IOException e) {
+            System.out.println(JSON_FILE + " is unable to be read!");
+        }
+        processCommand();
+    }
+
+    // MODIFIES: this
+    // EFFECTS: saves user data to file
+    private void saveData() {
+        try {
+            writer.open();
+            writer.write(user);
+            writer.close();
+            System.out.println("Saved " + user.getName() + "'s data to " + JSON_FILE);
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to save data to " + JSON_FILE);
+        }
+        processCommand();
     }
 
     // EFFECTS: prints the user's information and provides options for next command

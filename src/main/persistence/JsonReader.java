@@ -12,6 +12,7 @@ import java.util.stream.Stream;
 
 /**
  * JsonReader reads from json data stored in a file. Class takes aspects of JsonSerializationDemo starter
+ * from https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
  */
 public class JsonReader {
 
@@ -24,7 +25,7 @@ public class JsonReader {
 
     // EFFECTS: reads a user from json file and returns it
     //          throws IOException if an error occurs reading data from file
-    // Copied from https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo/blob/master/data/workroom.json
+    // Copied from https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
     public User read() throws IOException {
         String jsonData = readFile(source);
         JSONObject jsonObject = new JSONObject(jsonData);
@@ -32,7 +33,7 @@ public class JsonReader {
     }
 
     // EFFECTS: reads source file as string and returns it.
-    // Copied from https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo/blob/master/data/workroom.json
+    // Copied from https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
     private String readFile(String source) throws IOException {
         StringBuilder contentBuilder = new StringBuilder();
 

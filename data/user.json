@@ -1,0 +1,27 @@
+{
+  "name": "Russell",
+  "weight": 164,
+  "macrosNeeded": {
+    "calories": 1440,
+    "protein": 90,
+    "carbs": 180,
+    "fat": 40
+  },
+  "journal": {
+    "goal": 180,
+    "logs": [
+      {
+        "day": 1,
+        "entries": [
+        ],
+        "notes": [
+        ],
+        "weight": 164
+      }
+    ]
+  },
+  "saved": {
+    "favourites": [
+    ]
+  }
+}
