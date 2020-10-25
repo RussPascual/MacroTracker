@@ -41,6 +41,7 @@ public class Meal extends Food {
     @Override
     public JSONObject toJson() {
         JSONObject json = super.toJson();
+        json.put("isMeal", true);
         json.put("ingredients", ingredientsToJson());
         return json;
     }

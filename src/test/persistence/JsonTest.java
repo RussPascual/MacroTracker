@@ -1,9 +1,8 @@
 package persistence;
 
-import model.DayLog;
-import model.Food;
-import model.Macros;
-import model.User;
+import model.*;
+
+import javax.jws.soap.SOAPBinding;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -31,5 +30,51 @@ public class JsonTest {
         assertEquals(name, food.getName());
         assertEquals(isMeal, food.isMeal());
         checkMacros(protein, carbs, fat, food.getMacros());
+    }
+
+    protected User generalUser() {
+        User user = new User("Russell", 164, 180);
+        user.updateMacros(90, 180, 40, 1440);
+        generalJournal(user.getJournal());
+        generalSaved(user.getSaved());
+        return user;
+    }
+
+    protected void generalJournal(Journal journal) {
+        journal.nextDay(162);
+        Entry eggEntry = new Entry(new FoodItem("egg", new Macros(10, 8, 0)), 8);
+        Meal friedRice = new Meal("fried rice");
+        friedRice.addIngredient(new FoodItem("rice", new Macros(2, 20, 0)));
+        friedRice.addIngredient(new FoodItem("pork", new Macros(12, 20, 4)));
+        Entry friedRiceEntry = new Entry(friedRice, 12);
+        journal.addEntry(eggEntry);
+        journal.addEntry(friedRiceEntry);
+        journal.nextDay(164);
+        journal.getLastLog().addNote("fill later");
+        journal.getLastLog().addNote("eat a lot!");
+    }
+
+    protected void generalSaved(Favourites saved) {
+        FoodItem banana = new FoodItem("banana", new Macros(0, 15, 0));
+        Meal spaghettiAndMeatballs = new Meal("spaghetti and meatballs");
+        spaghettiAndMeatballs.addIngredient(new FoodItem("noodles", new Macros(2, 25, 0)));
+        spaghettiAndMeatballs.addIngredient(new FoodItem("spaghetti sauce", new Macros(5, 15, 2)));
+        spaghettiAndMeatballs.addIngredient(new FoodItem("meatballs", new Macros(12, 10, 3)));
+        saved.addFood(banana);
+        saved.addFood(spaghettiAndMeatballs);
+    }
+
+    protected User noEntriesOrNotes() {
+        User user = new User("Russell", 164, 180);
+        user.updateMacros(90, 180, 40, 1440);
+        Journal journal = user.getJournal();
+        journal.nextDay(162);
+        return user;
+    }
+
+    protected User noLogsOrSaved() {
+        User user = new User("Russell", 164, 180);
+        user.updateMacros(90, 180, 40, 1440);
+        return user;
     }
 }
