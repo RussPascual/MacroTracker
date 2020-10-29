@@ -1,7 +1,6 @@
 package ui;
 
 import model.*;
-import org.json.JSONObject;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
@@ -51,6 +50,26 @@ public class MacroTracker {
             }
         }
         processCommand();
+        saveBeforeQuit();
+    }
+
+    // MODIFIES: this
+    // EFFECTS: processes user command for whether to save before quitting
+    private void saveBeforeQuit() {
+        while (true) {
+            System.out.println("\nWould you like to save your data?");
+            System.out.println("'save' to save your data");
+            System.out.println("'quit' to quit");
+            String command = scanner.nextLine();
+            if (command.equals("save")) {
+                saveData();
+                break;
+            } else if (command.equals("quit")) {
+                break;
+            } else {
+                System.out.println("Input was not one of the options! Please try again!");
+            }
+        }
     }
 
     // MODIFIES: this
@@ -71,28 +90,23 @@ public class MacroTracker {
 
     // EFFECTS: returns the calories selected by user
     private double selectCalories() {
-        double calories = 0;
-        System.out.println("How many calories do you need in a day?");
-        boolean valid = false;
-        while (!valid) {
+        while (true) {
+            System.out.println("How many calories do you need in a day?");
             double command = scanner.nextDouble();
             scanner.nextLine();
             if (command >= 0) {
-                valid = true;
-                calories = command;
+                return command;
             } else {
                 System.out.println("Input is invalid! Please try again!");
             }
         }
-        return calories;
     }
 
     // MODIFIES: this
     // EFFECTS: sets the macro goals based on the calories input
     private void setMacroGoals() {
         double calories = selectCalories();
-        boolean valid = false;
-        while (!valid) {
+        while (true) {
             System.out.println("Ensuring that protein % + carbohydrates % + fat % = 100%");
             System.out.println("What percentage of your calories should be protein?");
             double protein = scanner.nextDouble();
@@ -104,9 +118,9 @@ public class MacroTracker {
             double fat = scanner.nextDouble();
             scanner.nextLine();
             if (protein >= 0 && carbs >= 0 && fat >= 0 && protein + carbs + fat == 100) {
-                valid = true;
                 user.setMacroGoals(calories, protein, carbs, fat);
                 System.out.println("Macro goals have successfully been set!");
+                break;
             } else {
                 System.out.println("At least one of the values inputted was invalid! Please try again!");
             }
@@ -382,7 +396,7 @@ public class MacroTracker {
         }
     }
 
-    // EFFECTS: prints the user's favourite foods if any
+    // EFFECTS: prints the user's favourite foods
     private void displayFavourites() {
         for (Food food : user.getSaved().getFoods()) {
             System.out.println(
@@ -400,15 +414,20 @@ public class MacroTracker {
         System.out.println("'home' to go back to home page");
     }
 
+    // EFFECTS: prints the user's favourites if there are any
+    private void displayFavouritesIfAvailable() {
+        if (!user.getSaved().getFoods().isEmpty()) {
+            displayFavourites();
+        } else {
+            System.out.println("You have no foods saved yet!");
+        }
+    }
+
     // MODIFIES: this
     // EFFECTS: processes user command for favourites, returns false if 'home', true if 'back'
     private boolean viewFavourites() {
         while (true) {
-            if (!user.getSaved().getFoods().isEmpty()) {
-                displayFavourites();
-            } else {
-                System.out.println("You have no foods saved yet!");
-            }
+            displayFavouritesIfAvailable();
             viewFavouritesMessages();
             String command = scanner.nextLine();
             if (command.equals("add")) {
@@ -698,7 +717,7 @@ public class MacroTracker {
                 log.addEntry(entry);
                 macroProgress();
             } else if (command.equals("favs")) {
-                displayFavourites();
+                displayFavouritesIfAvailable();
                 selectFoodToAdd();
             } else if (command.equals("back")) {
                 return true;

@@ -26,3 +26,4 @@ similar app named "MyFitnessPal" which offered similar services and helped me wi
 - As a user, I want to be able to copy a day's food journal onto another day's food journal
 - As a user, I want to be able to save my data (information and logs) to file for later use
 - As a user, I want to be able to access my previously saved data when I reopen the app
+- As a user, I want to be able to be prompted to save data right before quitting the application
