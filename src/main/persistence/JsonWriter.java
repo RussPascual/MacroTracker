@@ -13,6 +13,7 @@ import java.io.PrintWriter;
  */
 public class JsonWriter {
 
+    private static final int TAB = 4;
     private PrintWriter writer;
     private String destination;
 
@@ -31,7 +32,7 @@ public class JsonWriter {
     // EFFECTS: writes JSON representation of workroom to file
     public void write(User user) {
         JSONObject json = user.toJson();
-        writer.print(json);
+        writer.print(json.toString(TAB));
     }
 
     // MODIFIES: this

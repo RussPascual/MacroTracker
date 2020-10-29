@@ -1,27 +1,32 @@
 {
-  "name": "Russell",
-  "weight": 164,
-  "macrosNeeded": {
-    "calories": 1440,
-    "protein": 90,
-    "carbs": 180,
-    "fat": 40
-  },
-  "journal": {
-    "goal": 180,
-    "logs": [
-      {
-        "day": 1,
-        "entries": [
-        ],
-        "notes": [
-        ],
-        "weight": 164
-      }
-    ]
-  },
-  "saved": {
-    "favourites": [
-    ]
-  }
+    "journal": {
+        "goal": 180,
+        "logs": [{
+            "entries": [{
+                "hour": 8,
+                "food": {
+                    "macros": {
+                        "carbs": 12,
+                        "protein": 8,
+                        "fat": 0,
+                        "calories": 80
+                    },
+                    "name": "egg",
+                    "isMeal": false
+                }
+            }],
+            "notes": [],
+            "weight": 165,
+            "day": 1
+        }]
+    },
+    "saved": {"favourites": []},
+    "name": "Russell",
+    "weight": 165,
+    "macrosNeeded": {
+        "carbs": 385.00000000000006,
+        "protein": 175,
+        "fat": 62.22222222222222,
+        "calories": 2800
+    }
 }

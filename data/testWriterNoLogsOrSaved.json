@@ -1,1 +1,15 @@
-{"journal":{"goal":180,"logs":[]},"saved":{"favourites":[]},"name":"Russell","weight":164,"macrosNeeded":{"carbs":180,"protein":90,"fat":40,"calories":1440}}
+{
+    "journal": {
+        "goal": 180,
+        "logs": []
+    },
+    "saved": {"favourites": []},
+    "name": "Russell",
+    "weight": 164,
+    "macrosNeeded": {
+        "carbs": 180,
+        "protein": 90,
+        "fat": 40,
+        "calories": 1440
+    }
+}
