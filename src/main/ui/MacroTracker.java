@@ -17,6 +17,7 @@ import java.util.Scanner;
 public class MacroTracker {
 
     private static final String JSON_FILE = "./data/user.json";
+
     private User user;
     private Scanner scanner;
     private JsonReader reader;
@@ -34,7 +35,7 @@ public class MacroTracker {
 
     // MODIFIES: this
     // EFFECTS: runs the application
-    private void runTracker() {
+    protected void runTracker() {
         while (true) {
             System.out.println("'new' to for a new user account");
             System.out.println("'load' to load saved data");

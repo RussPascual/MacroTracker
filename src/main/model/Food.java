@@ -57,6 +57,10 @@ public abstract class Food {
         this.macros = macros;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     // MODIFIES: this
     // EFFECTS: adds input's macros onto meal's macros
     public void addMacros(FoodItem foodItem) {

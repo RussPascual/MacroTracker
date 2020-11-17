@@ -2,19 +2,7 @@
     "journal": {
         "goal": 180,
         "logs": [{
-            "entries": [{
-                "hour": 8,
-                "food": {
-                    "macros": {
-                        "carbs": 12,
-                        "protein": 8,
-                        "fat": 0,
-                        "calories": 80
-                    },
-                    "name": "egg",
-                    "isMeal": false
-                }
-            }],
+            "entries": [],
             "notes": [],
             "weight": 165,
             "day": 1

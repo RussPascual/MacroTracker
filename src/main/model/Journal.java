@@ -86,8 +86,9 @@ public class Journal {
 
     // EFFECTS: returns the remaining change needed
     public double remainingGoal() {
+        double start = weightTracker.get(0);
         double current = weightTracker.get(weightTracker.size() - 1);
-        return goal - current;
+        return start > goal ? current - goal : goal - current;
     }
 
     // MODIFIES: this

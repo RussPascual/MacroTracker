@@ -31,6 +31,27 @@ public class UserTest {
     }
 
     @Test
+    public void testSetMacrosNeeded() {
+        Macros macros = new Macros(10, 20, 30);
+        user.setMacrosNeeded(macros);
+        assertEquals(macros, user.getMacrosNeeded());
+    }
+
+    @Test
+    public void testSetJournal() {
+        Journal journal = new Journal(175);
+        user.setJournal(journal);
+        assertEquals(journal, user.getJournal());
+    }
+
+    @Test
+    public void testSetSaved() {
+        Favourites saved = new Favourites();
+        user.setSaved(saved);
+        assertEquals(saved, user.getSaved());
+    }
+
+    @Test
     public void testSetMacroGoals() {
         user.setMacroGoals(2800, 25, 55, 20);
         assertEquals((2800 * 0.25) / 4, user.getMacrosNeeded().getProtein());

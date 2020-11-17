@@ -11,12 +11,10 @@ import static org.junit.jupiter.api.Assertions.*;
 public class JournalTest {
 
     private Journal journal;
-    private List<Double> weights;
 
     @BeforeEach
     public void setUp() {
         journal = new Journal(165);
-        weights = new ArrayList<>();
     }
 
     @Test
@@ -105,7 +103,7 @@ public class JournalTest {
     }
 
     @Test
-    public void testRemainingGoal() {
+    public void testRemainingGoalGoalGreaterThanStart() {
         journal.nextDay(150);
         assertEquals(15.0, journal.remainingGoal());
 
@@ -114,6 +112,18 @@ public class JournalTest {
             journal.nextDay(150 + i);
         }
         assertEquals(165.0 - 159.0, journal.remainingGoal());
+    }
+
+    @Test
+    public void testRemainingGoalStartGreaterThanGoal() {
+        journal.nextDay(180);
+        assertEquals(15.0, journal.remainingGoal());
+
+        int size = 10;
+        for (int i = 0; i < size; i++) {
+            journal.nextDay(180 - i);
+        }
+        assertEquals(171.0 - 165.0, journal.remainingGoal());
     }
 
     @Test

@@ -28,4 +28,9 @@ public class FoodItemTest {
         assertEquals(24, food.getCalories());
     }
 
+    @Test
+    public void testSetName() {
+        food.setName("apple");
+        assertEquals("apple", food.getName());
+    }
 }

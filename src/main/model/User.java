@@ -50,6 +50,18 @@ public class User {
         this.name = name;
     }
 
+    public void setMacrosNeeded(Macros macrosNeeded) {
+        this.macrosNeeded = macrosNeeded;
+    }
+
+    public void setJournal(Journal journal) {
+        this.journal = journal;
+    }
+
+    public void setSaved(Favourites saved) {
+        this.saved = saved;
+    }
+
     // REQUIRES: input must all be non-negative
     // MODIFIES: this
     // EFFECTS: updates all the macro values to input
