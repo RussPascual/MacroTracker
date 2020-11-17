@@ -53,19 +53,7 @@ public class SoundPlayer {
     // EFFECTS: play sound if macro target is reached
     public void playSoundWhenMacrosAreHit() {
         if (checkMacros() && gui.isInstantiated()) {
-            try {
-                File file = new File(WOW).getAbsoluteFile();
-                AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
-                Clip clip = AudioSystem.getClip();
-                clip.open(audioInputStream);
-                clip.start();
-            } catch (LineUnavailableException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (UnsupportedAudioFileException e) {
-                e.printStackTrace();
-            }
+            playSound(WOW);
         }
         updateMacroProgress();
     }
@@ -84,19 +72,7 @@ public class SoundPlayer {
     // EFFECTS: play sound if weight goal is reached
     public void playSoundWhenWeightGoalReached() {
         if (checkWeight() && gui.isInstantiated()) {
-            try {
-                File file = new File(YAY).getAbsoluteFile();
-                AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
-                Clip clip = AudioSystem.getClip();
-                clip.open(audioInputStream);
-                clip.start();
-            } catch (LineUnavailableException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (UnsupportedAudioFileException e) {
-                e.printStackTrace();
-            }
+            playSound(YAY);
         }
         updateWeightProgress();
     }
@@ -105,5 +81,24 @@ public class SoundPlayer {
     // EFFECTS: return true if goal is reached and sound has not been played yet
     private boolean checkWeight() {
         return user.getJournal().remainingGoal() <= 0 && !metWeightGoal;
+    }
+
+    // MODIFIES: this
+    // EFFECTS: play wav file's sound
+    //          https://stackoverflow.com/questions/15526255/best-way-to-get-sound-on-button-press-for-a-java-calculator
+    private void playSound(String wav) {
+        try {
+            File file = new File(wav).getAbsoluteFile();
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            clip.start();
+        } catch (LineUnavailableException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (UnsupportedAudioFileException e) {
+            e.printStackTrace();
+        }
     }
 }
