@@ -10,6 +10,9 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.InputMismatchException;
 
+/**
+ * NewFoodPanel initializes the panel that handles the visibility and functionality for a user to create foods
+ */
 public class NewFoodPanel {
 
     private Journal journal;

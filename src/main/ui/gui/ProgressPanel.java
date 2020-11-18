@@ -10,6 +10,9 @@ import java.io.File;
 import javax.sound.sampled.AudioSystem;
 import java.io.IOException;
 
+/**
+ * ProgressPanel initializes the panel that handles the visibility of a user's macro and weight progress
+ */
 public class ProgressPanel {
 
     private User user;

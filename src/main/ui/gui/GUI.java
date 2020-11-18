@@ -7,6 +7,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * GUI initializes the frame and includes the panels for the user and possible functionality for user interaction
+ */
 public class GUI extends JFrame {
 
     private static final int WIDTH = 800;

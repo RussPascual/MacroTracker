@@ -9,6 +9,9 @@ import java.awt.event.ActionListener;
 import java.security.InvalidParameterException;
 import java.util.InputMismatchException;
 
+/**
+ * FavouritesPanel initializes the panel that handles the visibility and functionality for a user's favourite foods
+ */
 public class FavouritesPanel {
 
     private static final String FOOD = "food";

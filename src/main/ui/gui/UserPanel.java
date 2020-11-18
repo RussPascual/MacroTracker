@@ -12,6 +12,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.InputMismatchException;
 
+/**
+ * UserPanel initializes the panel that handles the visibility and functionality for a user's information
+ */
 public class UserPanel {
 
     private static final String JSON_FILE = "./data/user.json";

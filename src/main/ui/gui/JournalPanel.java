@@ -9,6 +9,9 @@ import java.awt.event.ActionListener;
 import java.security.InvalidParameterException;
 import java.util.InputMismatchException;
 
+/**
+ * JournalPanel initializes the panel that handles the visibility and functionality for a user's journal logs
+ */
 public class JournalPanel {
 
     private static final String ENTRIES = "entries";

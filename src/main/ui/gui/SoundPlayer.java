@@ -6,6 +6,9 @@ import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * SoundPlayer plays sounds based on wav files and the conditions for playing
+ */
 public class SoundPlayer {
 
     private static final String WOW = "./data/wow.wav";
@@ -84,7 +87,7 @@ public class SoundPlayer {
     }
 
     // MODIFIES: this
-    // EFFECTS: play wav file's sound
+    // EFFECTS: play wav file's sound. learned sound playing concept from
     //          https://stackoverflow.com/questions/15526255/best-way-to-get-sound-on-button-press-for-a-java-calculator
     private void playSound(String wav) {
         try {
