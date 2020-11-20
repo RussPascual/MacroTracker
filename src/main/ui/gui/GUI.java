@@ -32,7 +32,7 @@ public class GUI extends JFrame {
         super("Macro Tracker");
         user = new User("Marco", 0, 1);
         color = new Color(100, 100, 150);
-        player = new SoundPlayer(user, this);
+        player = new SoundPlayer(this);
         initializeGraphics();
         initializeMasterPanel();
         initializeMenuBar();
@@ -43,6 +43,10 @@ public class GUI extends JFrame {
         initializeNewFood();
         setVisible(true);
         card.show(master, "0");
+    }
+
+    public User getUser() {
+        return user;
     }
 
     // MODIFIES: this
@@ -68,35 +72,35 @@ public class GUI extends JFrame {
     // MODIFIES: this
     // EFFECTS: initialize userPanel
     private void initializeUser() {
-        userPanel = new UserPanel(user, this);
+        userPanel = new UserPanel(this);
         master.add(userPanel.getPanel(), "0");
     }
 
     // MODIFIES: this
     // EFFECTS: initialize journalPanel
     private void initializeJournal() {
-        journalPanel = new JournalPanel(user, this);
+        journalPanel = new JournalPanel(this);
         master.add(journalPanel.getPanel(), "1");
     }
 
     // MODIFIES: this
     // EFFECTS: initialize progressPanel
     private void initializeProgress() {
-        progressPanel = new ProgressPanel(user, this);
+        progressPanel = new ProgressPanel(this);
         master.add(progressPanel.getPanel(), "2");
     }
 
     // MODIFIES: this
     // EFFECTS: initialize favouritesPanel
     private void initializeFavourites() {
-        favouritesPanel = new FavouritesPanel(user, this);
+        favouritesPanel = new FavouritesPanel(this);
         master.add(favouritesPanel.getPanel(), "3");
     }
 
     // MODIFIES: this
     // EFFECTS: initialize newFoodPanel
     private void initializeNewFood() {
-        newFoodPanel = new NewFoodPanel(user, this);
+        newFoodPanel = new NewFoodPanel(this);
         master.add(newFoodPanel.getPanel(), "4");
     }
 
@@ -216,23 +220,23 @@ public class GUI extends JFrame {
         if (userPanel.isInitialized()) {
             card.show(master, s);
             if (userPanel.isLoaded()) {
-                copyUserPanel();
+//                copyUserPanel();
                 userPanel.setLoaded(false);
             }
         }
         update();
     }
 
-    // MODIFIES: this
-    // EFFECTS: copy user panel to all other panels
-    private void copyUserPanel() {
-        user = userPanel.getUser();
-        progressPanel.setUser(user);
-        journalPanel.setJournal(user.getJournal());
-        favouritesPanel.updateUser(user);
-        newFoodPanel.updateUser(user);
-        player.setUser(user);
-    }
+//    // MODIFIES: this
+//    // EFFECTS: copy user panel to all other panels
+//    private void copyUserPanel() {
+//        user = userPanel.getUser();
+//        progressPanel.setUser(user);
+//        journalPanel.setJournal(user.getJournal());
+//        favouritesPanel.updateUser(user);
+//        newFoodPanel.updateUser(user);
+//        player.setUser(user);
+//    }
 
     // MODIFIES: this
     // EFFECTS: update all panels

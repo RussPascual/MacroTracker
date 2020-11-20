@@ -14,7 +14,6 @@ public class SoundPlayer {
     private static final String WOW = "./data/wow.wav";
     private static final String YAY = "./data/yay.wav";
 
-    private User user;
     private GUI gui;
     private boolean metCalorieGoal;
     private boolean metProteinGoal;
@@ -23,8 +22,7 @@ public class SoundPlayer {
     private boolean metWeightGoal;
 
     // EFFECTS: construct a sound player
-    public SoundPlayer(User user, GUI gui) {
-        this.user = user;
+    public SoundPlayer(GUI gui) {
         this.gui = gui;
         metCalorieGoal = false;
         metProteinGoal = false;
@@ -33,13 +31,10 @@ public class SoundPlayer {
         metWeightGoal = false;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     // MODIFIES: this
     // EFFECTS: update macro progress fields
     public void updateMacroProgress() {
+        User user = gui.getUser();
         metCalorieGoal = user.metCalorieGoals();
         metProteinGoal = user.metProteinGoals();
         metCarbGoals = user.metCarbGoals();
@@ -49,7 +44,7 @@ public class SoundPlayer {
     // MODIFIES: this
     // EFFECTS: update weight progress field
     public void updateWeightProgress() {
-        metWeightGoal = user.getJournal().remainingGoal() == 0;
+        metWeightGoal = gui.getUser().getJournal().remainingGoal() == 0;
     }
 
     // MODIFIES: this
@@ -64,6 +59,7 @@ public class SoundPlayer {
     // MODIFIES: this
     // EFFECTS: return true if one of the targets are reached and sound has not yet been played
     private boolean checkMacros() {
+        User user = gui.getUser();
         boolean calories = user.metCalorieGoals() && !metCalorieGoal;
         boolean protein = user.metProteinGoals() && !metProteinGoal;
         boolean carbs = user.metCarbGoals() && !metCarbGoals;
@@ -83,7 +79,7 @@ public class SoundPlayer {
     // MODIFIES: this
     // EFFECTS: return true if goal is reached and sound has not been played yet
     private boolean checkWeight() {
-        return user.getJournal().remainingGoal() <= 0 && !metWeightGoal;
+        return gui.getUser().getJournal().remainingGoal() <= 0 && !metWeightGoal;
     }
 
     // MODIFIES: this

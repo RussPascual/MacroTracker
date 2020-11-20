@@ -17,7 +17,6 @@ public class JournalPanel {
     private static final String ENTRIES = "entries";
     private static final String NOTES = "notes";
 
-    private Journal journal;
     private int currentLog;
     private int currentEntry;
     private int currentNote;
@@ -25,28 +24,20 @@ public class JournalPanel {
     private GUI gui;
 
     // EFFECTS: constructs a journal panel
-    public JournalPanel(User user, GUI gui) {
-        journal = user.getJournal();
+    public JournalPanel(GUI gui) {
         this.gui = gui;
-        newDay(user.getWeight());
+        newDay(gui.getUser().getWeight());
         initializePanel();
-    }
-
-    public void setJournal(Journal journal) {
-        this.journal = journal;
     }
 
     public JPanel getPanel() {
         return panel;
     }
 
-    public Journal getJournal() {
-        return journal;
-    }
-
     // MODIFIES: this
     // EFFECTS: adds a new day to the journal and day menu and sets it as current day
     private void newDay(double weight) {
+        Journal journal = gui.getUser().getJournal();
         journal.nextDay(weight);
         currentLog = journal.getLogs().size();
         currentEntry = 0;
@@ -125,6 +116,7 @@ public class JournalPanel {
     // EFFECTS: select day based on input
     //          throw IllegalArgumentException if day does not exist
     private void selectDay() {
+        Journal journal = gui.getUser().getJournal();
         int day = Integer.parseInt(((JTextField) panel.getComponent(48)).getText());
         if (day > 0 && day <= journal.getLogs().size()) {
             ((JLabel) panel.getComponent(46)).setText("Day #: " + day);
@@ -320,6 +312,7 @@ public class JournalPanel {
     //          throw IllegalArgumentException if input is negative
     //          throw InputMismatchException if time < 0 or time > 23
     private void addNewEntry() {
+        Journal journal = gui.getUser().getJournal();
         String name = ((JTextField) panel.getComponent(1)).getText();
         int time = Integer.parseInt(((JTextField) panel.getComponent(5)).getText());
         double calories = Double.parseDouble(((JTextField) panel.getComponent(3)).getText());
@@ -388,7 +381,7 @@ public class JournalPanel {
             public void actionPerformed(ActionEvent e) {
                 clearMessages();
                 if (currentEntry > 0) {
-                    journal.getLog(currentLog).removeEntry(currentEntry);
+                    gui.getUser().getJournal().getLog(currentLog).removeEntry(currentEntry);
                     gui.getPlayer().updateMacroProgress();
                 }
                 update();
@@ -438,13 +431,14 @@ public class JournalPanel {
     public void update() {
         updateEntries();
         updateNotes();
-        ((JLabel) panel.getComponent(45)).setText("# of Days: " + journal.getLogs().size());
+        ((JLabel) panel.getComponent(45)).setText("# of Days: " + gui.getUser().getJournal().getLogs().size());
         ((JLabel) panel.getComponent(46)).setText("Day #: " + currentLog);
     }
 
     // MODIFIES: this
     // EFFECTS: updates current entries
     private void updateEntries() {
+        Journal journal = gui.getUser().getJournal();
         if (currentEntry > journal.getLog(currentLog).getEntries().size()) {
             currentEntry = journal.getLog(currentLog).getEntries().size();
         }
@@ -473,7 +467,7 @@ public class JournalPanel {
     // MODIFIES: this
     // EFFECTS: updates current note information
     private void setCurrentNote() {
-        String note = journal.getLog(currentLog).getNotes().get(currentNote - 1);
+        String note = gui.getUser().getJournal().getLog(currentLog).getNotes().get(currentNote - 1);
         ((JLabel) panel.getComponent(35)).setText("Note: " + note);
     }
 
@@ -488,6 +482,7 @@ public class JournalPanel {
     // MODIFIES: this
     // EFFECTS: updates current entry information
     private void setCurrentEntry() {
+        Journal journal = gui.getUser().getJournal();
         String foodName = journal.getLog(currentLog).getEntries().get(currentEntry - 1).getFood().getName();
         ((JLabel) panel.getComponent(22)).setText("Food Name: " + foodName);
         int time = journal.getLog(currentLog).getEntries().get(currentEntry - 1).getHour();
@@ -518,6 +513,7 @@ public class JournalPanel {
     // EFFECTS: sets current entry or note to next element if true and previous element if false
     //          throw InvalidParameterException if list is not "entries" or "notes"
     private void rotate(boolean forward, String list) {
+        Journal journal = gui.getUser().getJournal();
         if (list.equals("entries")) {
             if (forward) {
                 currentEntry = (currentEntry == journal.getLog(currentLog).getEntries().size()) ? 1 : currentEntry + 1;
@@ -564,6 +560,7 @@ public class JournalPanel {
                 clearMessages();
                 String note = ((JTextField) panel.getComponent(32)).getText();
                 if (note.length() > 0) {
+                    Journal journal = gui.getUser().getJournal();
                     journal.getLog(currentLog).addNote(note);
                     currentNote = journal.getLog(currentLog).getNotes().size();
                 }
@@ -608,6 +605,7 @@ public class JournalPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 clearMessages();
+                Journal journal = gui.getUser().getJournal();
                 if (currentNote > 0) {
                     journal.getLog(currentLog).removeNote(currentNote);
                 }

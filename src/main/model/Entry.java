@@ -25,7 +25,6 @@ public class Entry {
         return food;
     }
 
-    // EFFECTS: returns the macros of the food
     public Macros getMacros() {
         return food.getMacros();
     }

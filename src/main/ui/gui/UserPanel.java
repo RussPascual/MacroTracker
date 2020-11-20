@@ -1,5 +1,7 @@
 package ui.gui;
 
+import model.exceptions.NegativeInputException;
+import model.exceptions.PercentageException;
 import model.User;
 import persistence.JsonReader;
 import persistence.JsonWriter;
@@ -10,7 +12,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.InputMismatchException;
 
 /**
  * UserPanel initializes the panel that handles the visibility and functionality for a user's information
@@ -19,7 +20,6 @@ public class UserPanel {
 
     private static final String JSON_FILE = "./data/user.json";
 
-    private User user;
     private JPanel panel;
     private boolean initialized;
     private JsonReader reader;
@@ -28,8 +28,7 @@ public class UserPanel {
     private GUI gui;
 
     // EFFECTS: constructs a user panel
-    public UserPanel(User user, GUI gui) {
-        this.user = user;
+    public UserPanel(GUI gui) {
         initialized = false;
         reader = new JsonReader(JSON_FILE);
         writer = new JsonWriter(JSON_FILE);
@@ -64,10 +63,6 @@ public class UserPanel {
         return initialized;
     }
 
-    public User getUser() {
-        return user;
-    }
-
     public boolean isLoaded() {
         return loaded;
     }
@@ -90,9 +85,9 @@ public class UserPanel {
                     update();
                 } catch (NumberFormatException exception) {
                     panel.getComponent(16).setVisible(true);
-                } catch (IllegalArgumentException exception) {
+                } catch (NegativeInputException exception) {
                     panel.getComponent(17).setVisible(true);
-                } catch (InputMismatchException exception) {
+                } catch (PercentageException exception) {
                     panel.getComponent(18).setVisible(true);
                 }
             }
@@ -119,7 +114,7 @@ public class UserPanel {
     // EFFECTS: sets user based on text field inputs
     //          throw IllegalArgumentException if input is negative
     //          throw InputMismatchException if percentages don't add to 100
-    private void setUser() {
+    private void setUser() throws NegativeInputException, PercentageException {
         String name = ((JTextField) panel.getComponent(1)).getText();
         double weight = Double.parseDouble(((JTextField) panel.getComponent(3)).getText());
         double goal = Double.parseDouble(((JTextField) panel.getComponent(5)).getText());
@@ -127,16 +122,7 @@ public class UserPanel {
         double protein = Double.parseDouble(((JTextField) panel.getComponent(9)).getText());
         double carbs = Double.parseDouble(((JTextField) panel.getComponent(11)).getText());
         double fat = Double.parseDouble(((JTextField) panel.getComponent(13)).getText());
-        if (weight < 0 || goal < 0 || calories < 0 || protein < 0 || carbs < 0 || fat < 0) {
-            throw new IllegalArgumentException();
-        }
-        if (protein + carbs + fat != 100.0) {
-            throw new InputMismatchException();
-        }
-        user.setName(name);
-        user.updateWeight(weight);
-        user.getJournal().setGoal(goal);
-        user.setMacroGoals(calories, protein, carbs, fat);
+        gui.getUser().updateUser(name, weight, goal, calories, protein, carbs, fat);
         initialized = true;
         panel.setVisible(false);
     }
@@ -214,6 +200,7 @@ public class UserPanel {
     // MODIFIES: this
     // EFFECTS: adds info to panel for display
     private void setDisplay() {
+        User user = gui.getUser();
         JLabel name = new JLabel("Name: " + user.getName());
         name.setBounds(410, 130, 150, 25);
         JLabel weight = new JLabel("Weight: " + user.getWeight());
@@ -279,8 +266,9 @@ public class UserPanel {
     }
 
     private void updateUser(User userCopy) {
+        User user = gui.getUser();
         user.setName(userCopy.getName());
-        user.updateWeight(userCopy.getWeight());
+        user.setWeight(userCopy.getWeight());
         user.setMacrosNeeded(userCopy.getMacrosNeeded());
         user.setJournal(userCopy.getJournal());
         user.setSaved(userCopy.getSaved());
@@ -298,6 +286,7 @@ public class UserPanel {
     // MODIFIES: this
     // EFFECTS: updates current info
     private void setCurrentInfo() {
+        User user = gui.getUser();
         ((JLabel) panel.getComponent(19)).setText("Name: " + user.getName());
         ((JLabel) panel.getComponent(20)).setText("Weight: " + user.getWeight());
         ((JLabel) panel.getComponent(21)).setText("Weight Goal: " + user.getJournal().getGoal());
@@ -331,7 +320,7 @@ public class UserPanel {
         if (initialized) {
             try {
                 writer.open();
-                writer.write(user);
+                writer.write(gui.getUser());
                 writer.close();
             } catch (FileNotFoundException e) {
                 System.out.println("Unable to save data to " + JSON_FILE);

@@ -1,5 +1,7 @@
 package model;
 
+import model.exceptions.NegativeInputException;
+import model.exceptions.PercentageException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -31,6 +33,12 @@ public class UserTest {
     }
 
     @Test
+    public void testSetWeight() {
+        user.setWeight(100.0);
+        assertEquals(100.0, user.getWeight());
+    }
+
+    @Test
     public void testSetMacrosNeeded() {
         Macros macros = new Macros(10, 20, 30);
         user.setMacrosNeeded(macros);
@@ -53,11 +61,77 @@ public class UserTest {
 
     @Test
     public void testSetMacroGoals() {
-        user.setMacroGoals(2800, 25, 55, 20);
-        assertEquals((2800 * 0.25) / 4, user.getMacrosNeeded().getProtein());
-        assertEquals((2800 * 0.55) / 4, user.getMacrosNeeded().getCarbs());
-        assertEquals((2800 * 0.20) / 9, user.getMacrosNeeded().getFat());
-        assertEquals(2800, user.getMacrosNeeded().getCalories());
+        try {
+            user.setMacroGoals(2800, 25, 55, 20);
+            assertEquals((2800 * 0.25) / 4, user.getMacrosNeeded().getProtein());
+            assertEquals((2800 * 0.55) / 4, user.getMacrosNeeded().getCarbs());
+            assertEquals((2800 * 0.20) / 9, user.getMacrosNeeded().getFat());
+            assertEquals(2800, user.getMacrosNeeded().getCalories());
+        } catch (PercentageException e) {
+            fail();
+        } catch (NegativeInputException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testSetMacroGoalsNotAddUpToOneHundred() {
+        try {
+            user.setMacroGoals(2800, 25, 50, 20);
+            fail();
+        } catch (PercentageException e) {
+            // expected
+        } catch (NegativeInputException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testSetMacroGoalsNegativeProtein() {
+        try {
+            user.setMacroGoals(2800, -25, 50, 75);
+            fail();
+        } catch (PercentageException e) {
+            fail();
+        } catch (NegativeInputException e) {
+            // expected
+        }
+    }
+
+    @Test
+    public void testSetMacroGoalsNegativeCarbs() {
+        try {
+            user.setMacroGoals(2800, 75, -50, 75);
+            fail();
+        } catch (PercentageException e) {
+            fail();
+        } catch (NegativeInputException e) {
+            // expected
+        }
+    }
+
+    @Test
+    public void testSetMacroGoalsNegativeFat() {
+        try {
+            user.setMacroGoals(2800, 60, 60, -20);
+            fail();
+        } catch (PercentageException e) {
+            fail();
+        } catch (NegativeInputException e) {
+            // expected
+        }
+    }
+
+    @Test
+    public void testSetMacroGoalsDoesNotAddOneHundred() {
+        try {
+            user.setMacroGoals(2800, 25, 50, 20);
+            fail();
+        } catch (PercentageException e) {
+            // expected
+        } catch (NegativeInputException e) {
+            fail();
+        }
     }
 
     @Test
@@ -70,12 +144,7 @@ public class UserTest {
 
     @Test
     public void testMetCalorieGoals() {
-        user.getJournal().nextDay(160);
-        user.setMacroGoals(720, 25, 50, 25);
-        assertEquals(45, user.getMacrosNeeded().getProtein());
-        assertEquals(90, user.getMacrosNeeded().getCarbs());
-        assertEquals(20, user.getMacrosNeeded().getFat());
-        assertEquals(720, user.getMacrosNeeded().getCalories());
+        testSetNewMacroGoals();
         assertFalse(user.metCalorieGoals());
         Entry testEntry = new Entry(new FoodItem("test", new Macros(89, 90, 0)), 0);
         Entry anotherTestEntry = new Entry(new FoodItem("test", new Macros(1, 0, 0)), 0);
@@ -87,12 +156,7 @@ public class UserTest {
 
     @Test
     public void testMetProteinGoals() {
-        user.getJournal().nextDay(160);
-        user.setMacroGoals(720, 25, 50, 25);
-        assertEquals(45, user.getMacrosNeeded().getProtein());
-        assertEquals(90, user.getMacrosNeeded().getCarbs());
-        assertEquals(20, user.getMacrosNeeded().getFat());
-        assertEquals(720, user.getMacrosNeeded().getCalories());
+        testSetNewMacroGoals();
         assertFalse(user.metProteinGoals());
         Entry testEntry = new Entry(new FoodItem("test", new Macros(44, 0, 0)), 0);
         Entry anotherTestEntry = new Entry(new FoodItem("test", new Macros(1, 0, 0)), 0);
@@ -104,12 +168,7 @@ public class UserTest {
 
     @Test
     public void testMetCarbGoals() {
-        user.getJournal().nextDay(160);
-        user.setMacroGoals(720, 25, 50, 25);
-        assertEquals(45, user.getMacrosNeeded().getProtein());
-        assertEquals(90, user.getMacrosNeeded().getCarbs());
-        assertEquals(20, user.getMacrosNeeded().getFat());
-        assertEquals(720, user.getMacrosNeeded().getCalories());
+        testSetNewMacroGoals();
         assertFalse(user.metCarbGoals());
         Entry testEntry = new Entry(new FoodItem("test", new Macros(0, 89, 0)), 0);
         Entry anotherTestEntry = new Entry(new FoodItem("test", new Macros(0, 1, 0)), 0);
@@ -121,12 +180,7 @@ public class UserTest {
 
     @Test
     public void testMetFatGoals() {
-        user.getJournal().nextDay(160);
-        user.setMacroGoals(720, 25, 50, 25);
-        assertEquals(45, user.getMacrosNeeded().getProtein());
-        assertEquals(90, user.getMacrosNeeded().getCarbs());
-        assertEquals(20, user.getMacrosNeeded().getFat());
-        assertEquals(720, user.getMacrosNeeded().getCalories());
+        testSetNewMacroGoals();
         assertFalse(user.metFatGoals());
         Entry testEntry = new Entry(new FoodItem("test", new Macros(0, 0, 19)), 0);
         Entry anotherTestEntry = new Entry(new FoodItem("test", new Macros(0, 0, 1)), 0);
@@ -138,12 +192,7 @@ public class UserTest {
 
     @Test
     public void testRemainingMacros() {
-        user.getJournal().nextDay(160);
-        user.setMacroGoals(720, 25, 50, 25);
-        assertEquals(45, user.getMacrosNeeded().getProtein());
-        assertEquals(90, user.getMacrosNeeded().getCarbs());
-        assertEquals(20, user.getMacrosNeeded().getFat());
-        assertEquals(720, user.getMacrosNeeded().getCalories());
+        testSetNewMacroGoals();
         Entry testEntry = new Entry(new FoodItem("test", new Macros(5, 10, 15)), 0);
         user.getJournal().addEntry(testEntry);
         assertEquals(40, user.remainingMacros().getProtein());
@@ -163,30 +212,246 @@ public class UserTest {
         assertEquals(0, user.remainingMacros().getCalories());
     }
 
+    private void testSetNewMacroGoals() {
+        try {
+            user.getJournal().nextDay(160);
+            user.setMacroGoals(720, 25, 50, 25);
+            assertEquals(45, user.getMacrosNeeded().getProtein());
+            assertEquals(90, user.getMacrosNeeded().getCarbs());
+            assertEquals(20, user.getMacrosNeeded().getFat());
+            assertEquals(720, user.getMacrosNeeded().getCalories());
+        } catch (PercentageException e) {
+            fail();
+        } catch (NegativeInputException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testUpdateWeightNegativeWeight() {
+        try {
+            assertEquals(160, user.getWeight());
+            user.updateWeight(-160.5);
+            fail();
+        } catch (NegativeInputException e) {
+            // expected
+        }
+    }
+
     @Test
     public void testUpdateWeightEmptyJournal() {
-        assertEquals(160, user.getWeight());
-        user.updateWeight(160.5);
-        assertEquals(160.5, user.getWeight());
+        try {
+            assertEquals(160, user.getWeight());
+            user.updateWeight(160.5);
+            assertEquals(160.5, user.getWeight());
+        } catch (NegativeInputException e) {
+            fail();
+        }
     }
 
     @Test
     public void testUpdateWeightNonEmptyJournal() {
-        assertEquals(160, user.getWeight());
-        user.getJournal().nextDay(159.5);
-        user.getJournal().nextDay(160.5);
-        assertEquals(160.5, user.getJournal().getLastLog().getWeight());
-        user.updateWeight(161.2);
-        assertEquals(161.2, user.getWeight());
-        assertEquals(161.2, user.getJournal().getLastLog().getWeight());
+        try {
+            assertEquals(160, user.getWeight());
+            user.getJournal().nextDay(159.5);
+            user.getJournal().nextDay(160.5);
+            assertEquals(160.5, user.getJournal().getLastLog().getWeight());
+            user.updateWeight(161.2);
+            assertEquals(161.2, user.getWeight());
+            assertEquals(161.2, user.getJournal().getLastLog().getWeight());
+        } catch (NegativeInputException e) {
+            fail();
+        }
     }
 
     @Test
-    public void testUpdateMacros() {
-        user.updateMacros(1, 2, 3, 4);
-        assertEquals(1, user.getMacrosNeeded().getProtein());
-        assertEquals(2, user.getMacrosNeeded().getCarbs());
-        assertEquals(3, user.getMacrosNeeded().getFat());
-        assertEquals(4, user.getMacrosNeeded().getCalories());
+    public void testUpdateMacrosNonNegativeInput() {
+        try {
+            user.updateMacros(1, 2, 3, 4);
+            assertEquals(1, user.getMacrosNeeded().getProtein());
+            assertEquals(2, user.getMacrosNeeded().getCarbs());
+            assertEquals(3, user.getMacrosNeeded().getFat());
+            assertEquals(4, user.getMacrosNeeded().getCalories());
+        } catch (NegativeInputException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testUpdateMacrosNegativeProtein() {
+        try {
+            user.updateMacros(-1, 2, 3, 4);
+            fail();
+        } catch (NegativeInputException e) {
+            // expected
+        }
+    }
+
+    @Test
+    public void testUpdateMacrosNegativeCarbs() {
+        try {
+            user.updateMacros(1, -2, 3, 4);
+            fail();
+        } catch (NegativeInputException e) {
+            // expected
+        }
+    }
+
+    @Test
+    public void testUpdateMacrosNegativeFat() {
+        try {
+            user.updateMacros(1, 2, -3, 4);
+            fail();
+        } catch (NegativeInputException e) {
+            // expected
+        }
+    }
+
+    @Test
+    public void testUpdateMacrosNegativeCalories() {
+        try {
+            user.updateMacros(1, 2, 3, -4);
+            fail();
+        } catch (NegativeInputException e) {
+            // expected
+        }
+    }
+
+    @Test
+    public void testUpdateUser() {
+        try {
+            user.updateUser("test", 1, 2, 720, 25, 50, 25);
+            assertEquals("test", user.getName());
+            assertEquals(1, user.getWeight());
+            assertEquals(2, user.getJournal().getGoal());
+            assertEquals(45, user.getMacrosNeeded().getProtein());
+            assertEquals(90, user.getMacrosNeeded().getCarbs());
+            assertEquals(20, user.getMacrosNeeded().getFat());
+            assertEquals(720, user.getMacrosNeeded().getCalories());
+        } catch (PercentageException e) {
+            fail();
+        } catch (NegativeInputException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testUpdateUserNegativeWeight() {
+        try {
+            user.updateUser("test", -1, 2, 720, 25, 50, 25);
+            fail();
+        } catch (PercentageException e) {
+            fail();
+        } catch (NegativeInputException e) {
+            // expected
+        }
+    }
+
+    @Test
+    public void testUpdateUserNegativeGoal() {
+        try {
+            user.updateUser("test", 1, -2, 720, 25, 50, 25);
+            fail();
+        } catch (PercentageException e) {
+            fail();
+        } catch (NegativeInputException e) {
+            // expected
+        }
+    }
+
+    @Test
+    public void testUpdateUserNegativeCalories() {
+        try {
+            user.updateUser("test", 1, 2, -720, 25, 50, 25);
+            fail();
+        } catch (PercentageException e) {
+            fail();
+        } catch (NegativeInputException e) {
+            // expected
+        }
+    }
+
+    @Test
+    public void testUpdateUserNegativeProtein() {
+        try {
+            user.updateUser("test", 1, 2, 720, -25, 55, 70);
+            fail();
+        } catch (PercentageException e) {
+            fail();
+        } catch (NegativeInputException e) {
+            // expected
+        }
+    }
+
+    @Test
+    public void testUpdateUserNegativeCarbs() {
+        try {
+            user.updateUser("test", 1, 2, 720, 75, -55, 80);
+            fail();
+        } catch (PercentageException e) {
+            fail();
+        } catch (NegativeInputException e) {
+            // expected
+        }
+    }
+
+    @Test
+    public void testUpdateUserNegativeFat() {
+        try {
+            user.updateUser("test", 1, 2, 720, 65, 55, -20);
+            fail();
+        } catch (PercentageException e) {
+            fail();
+        } catch (NegativeInputException e) {
+            // expected
+        }
+    }
+
+    @Test
+    public void testUpdateUserPercentageDoesNotAddToOneHundred() {
+        try {
+            user.updateUser("test", 1, 2, 720, 25, 50, 20);
+            fail();
+        } catch (PercentageException e) {
+            // expected
+        } catch (NegativeInputException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testUpdateUserNegativeProteinAndPercentageDoesNotAddToOneHundred() {
+        try {
+            user.updateUser("test", 1, 2, 720, -25, 50, 25);
+            fail();
+        } catch (PercentageException e) {
+            fail();
+        } catch (NegativeInputException e) {
+            // expected
+        }
+    }
+
+    @Test
+    public void testUpdateUserNegativeCarbsAndPercentageDoesNotAddToOneHundred() {
+        try {
+            user.updateUser("test", 1, 2, 720, 25, -50, 25);
+            fail();
+        } catch (PercentageException e) {
+            fail();
+        } catch (NegativeInputException e) {
+            // expected
+        }
+    }
+
+    @Test
+    public void testUpdateUserNegativeFatAndPercentageDoesNotAddToOneHundred() {
+        try {
+            user.updateUser("test", 1, 2, 720, 25, 50, -25);
+            fail();
+        } catch (PercentageException e) {
+            fail();
+        } catch (NegativeInputException e) {
+            // expected
+        }
     }
 }

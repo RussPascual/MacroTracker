@@ -1,10 +1,10 @@
 package persistence;
 
 import model.*;
-
-import javax.jws.soap.SOAPBinding;
+import model.exceptions.NegativeInputException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class JsonTest {
 
@@ -34,7 +34,11 @@ public class JsonTest {
 
     protected User generalUser() {
         User user = new User("Russell", 164, 180);
-        user.updateMacros(90, 180, 40, 1440);
+        try {
+            user.updateMacros(90, 180, 40, 1440);
+        } catch (NegativeInputException e) {
+            fail();
+        }
         generalJournal(user.getJournal());
         generalSaved(user.getSaved());
         return user;
@@ -66,7 +70,11 @@ public class JsonTest {
 
     protected User noEntriesOrNotes() {
         User user = new User("Russell", 164, 180);
-        user.updateMacros(90, 180, 40, 1440);
+        try {
+            user.updateMacros(90, 180, 40, 1440);
+        } catch (NegativeInputException e) {
+            fail();
+        }
         Journal journal = user.getJournal();
         journal.nextDay(162);
         return user;
@@ -74,7 +82,11 @@ public class JsonTest {
 
     protected User noLogsOrSaved() {
         User user = new User("Russell", 164, 180);
-        user.updateMacros(90, 180, 40, 1440);
+        try {
+            user.updateMacros(90, 180, 40, 1440);
+        } catch (NegativeInputException e) {
+            fail();
+        }
         return user;
     }
 }

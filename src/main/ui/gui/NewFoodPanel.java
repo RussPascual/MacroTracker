@@ -15,8 +15,6 @@ import java.util.InputMismatchException;
  */
 public class NewFoodPanel {
 
-    private Journal journal;
-    private Favourites saved;
     private JPanel panel;
     private Meal meal;
     private boolean setName;
@@ -24,8 +22,7 @@ public class NewFoodPanel {
     private GUI gui;
 
     // EFFECTS: constructs a newFoodPanel
-    public NewFoodPanel(User user, GUI gui) {
-        updateUser(user);
+    public NewFoodPanel(GUI gui) {
         meal = null;
         setName = false;
         isMeal = false;
@@ -35,13 +32,6 @@ public class NewFoodPanel {
 
     public JPanel getPanel() {
         return panel;
-    }
-
-    // MODIFIES: this
-    // EFFECTS: update journal and saved based on input
-    public void updateUser(User user) {
-        journal = user.getJournal();
-        saved = user.getSaved();
     }
 
     // MODIFIES: this
@@ -294,6 +284,7 @@ public class NewFoodPanel {
     // EFFECTS: add new entry
     //          throw IllegalArgumentException if negative inputs are found
     private void addNewEntry() {
+        Journal journal = gui.getUser().getJournal();
         if (isMeal) {
             if (meal.getIngredients().isEmpty()) {
                 panel.getComponent(26).setVisible(true);
@@ -353,6 +344,7 @@ public class NewFoodPanel {
     // EFFECTS: add to favourite
     //          throw IllegalArgumentException if user input is negative
     private void addToFavourite() {
+        Favourites saved = gui.getUser().getSaved();
         if (isMeal) {
             if (meal.getIngredients().isEmpty()) {
                 panel.getComponent(26).setVisible(true);
@@ -382,6 +374,7 @@ public class NewFoodPanel {
             public void actionPerformed(ActionEvent e) {
                 meal = (isMeal) ? new Meal("Meal") : null;
                 setName = false;
+                update();
             }
         });
         panel.add(reset); // 29

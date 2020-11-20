@@ -1,6 +1,8 @@
 package ui;
 
 import model.*;
+import model.exceptions.NegativeInputException;
+import model.exceptions.PercentageException;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
@@ -118,11 +120,13 @@ public class MacroTracker {
             System.out.println("What percentage of your calories should be fat?");
             double fat = scanner.nextDouble();
             scanner.nextLine();
-            if (protein >= 0 && carbs >= 0 && fat >= 0 && protein + carbs + fat == 100) {
+            try {
                 user.setMacroGoals(calories, protein, carbs, fat);
                 System.out.println("Macro goals have successfully been set!");
                 break;
-            } else {
+            } catch (PercentageException e) {
+                System.out.println("At least one of the values inputted was invalid! Please try again!");
+            } catch (NegativeInputException e) {
                 System.out.println("At least one of the values inputted was invalid! Please try again!");
             }
         }
@@ -308,11 +312,11 @@ public class MacroTracker {
             System.out.println("What's your weight now?");
             double weight = scanner.nextDouble();
             scanner.nextLine();
-            if (weight > 0) {
+            try {
                 user.updateWeight(weight);
                 System.out.println("Change successfully made!");
                 break;
-            } else {
+            } catch (NegativeInputException e) {
                 System.out.println("Input was invalid! Please try again!");
             }
         }
@@ -543,12 +547,12 @@ public class MacroTracker {
         scanner.nextLine();
         boolean valid = false;
         while (!valid) {
-            if (weight > 0) {
-                valid = true;
+            try {
                 user.getJournal().nextDay(weight);
                 user.updateWeight(weight);
+                valid = true;
                 System.out.println("New log successfully created!");
-            } else {
+            } catch (NegativeInputException e) {
                 System.out.println("Input was invalid! Please try again!");
                 weight = scanner.nextDouble();
                 scanner.nextLine();

@@ -19,7 +19,6 @@ public class Favourites {
         foods = new ArrayList<>();
     }
 
-    // EFFECTS: returns the foods
     public List<Food> getFoods() {
         return foods;
     }

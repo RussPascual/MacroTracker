@@ -1,9 +1,8 @@
 package model;
 
+import model.exceptions.NegativeInputException;
+import model.exceptions.PercentageException;
 import org.json.JSONObject;
-
-import java.util.Date;
-import java.util.List;
 
 /**
  * User represents the user's data such as name, weight, goals, and personalized macro targets.
@@ -50,6 +49,10 @@ public class User {
         this.name = name;
     }
 
+    public void setWeight(double weight) {
+        this.weight = weight;
+    }
+
     public void setMacrosNeeded(Macros macrosNeeded) {
         this.macrosNeeded = macrosNeeded;
     }
@@ -62,18 +65,29 @@ public class User {
         this.saved = saved;
     }
 
-    // REQUIRES: input must all be non-negative
     // MODIFIES: this
     // EFFECTS: updates all the macro values to input
-    public void updateMacros(double protein, double carbohydrates, double fat, double calories) {
+    //          throws NegativeInputException if any input is negative
+    public void updateMacros(double protein, double carbohydrates, double fat, double calories)
+            throws NegativeInputException {
+        if (protein < 0 || carbohydrates < 0 || fat < 0 || calories < 0) {
+            throw new NegativeInputException();
+        }
         macrosNeeded.updateMacros(protein, carbohydrates, fat, calories);
     }
 
-    // REQUIRES: protein, carbs, and fat must add up to 100
     // MODIFIES: this
     // EFFECTS: sets macrosNeeded to the calorie input and the protein, carbs, and fat inputs
     //          based on percentage of calories
-    public void setMacroGoals(double calories, double protein, double carbs, double fat) {
+    //          throws PercentageException if protein + carbs + fat != 100.0
+    public void setMacroGoals(double calories, double protein, double carbs, double fat)
+            throws PercentageException, NegativeInputException {
+        if (protein < 0 || carbs < 0 || fat < 0) {
+            throw new NegativeInputException();
+        }
+        if (protein + carbs + fat != 100.0) {
+            throw new PercentageException();
+        }
         double proteinCalories = (protein / 100.0) * calories;
         double carbohydratesCalories = (carbs / 100.0) * calories;
         double fatCalories = (fat / 100.0) * calories;
@@ -149,14 +163,32 @@ public class User {
         return new Macros(protein, carbs, fat);
     }
 
-    // REQUIRES: weight > 0
     // MODIFIES: this
     // EFFECTS: updates the weight of the user
-    public void updateWeight(double weight) {
+    //          throws NegativeInputException if weight is not positive
+    public void updateWeight(double weight) throws NegativeInputException {
+        if (weight < 0) {
+            throw new NegativeInputException();
+        }
         this.weight = weight;
         if (!journal.getLogs().isEmpty()) {
             journal.updateWeight(weight);
         }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: updates all of the user's information
+    //          throws NegativeInputException if any numerical values are negative
+    public void updateUser(String name, double weight, double goal,
+                           double calories, double protein, double carbs, double fat)
+            throws NegativeInputException, PercentageException {
+        if (weight < 0 || goal < 0 || calories < 0 || protein < 0 || carbs < 0 || fat < 0) {
+            throw new NegativeInputException();
+        }
+        setMacroGoals(calories, protein, carbs, fat);
+        setName(name);
+        updateWeight(weight);
+        getJournal().setGoal(goal);
     }
 
     public JSONObject toJson() {

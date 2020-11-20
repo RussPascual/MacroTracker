@@ -15,23 +15,13 @@ import java.io.IOException;
  */
 public class ProgressPanel {
 
-    private User user;
     private JPanel panel;
     private GUI gui;
 
     // EFFECTS: constructs a progress panel
-    public ProgressPanel(User user, GUI gui) {
-        this.user = user;
+    public ProgressPanel(GUI gui) {
         this.gui = gui;
         initializePanel();
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public User getUser() {
-        return user;
     }
 
     public JPanel getPanel() {
@@ -166,7 +156,7 @@ public class ProgressPanel {
     // MODIFIES: this
     // EFFECTS: update macro progress
     private void updateMacros() {
-        Macros macros = user.getJournal().getLastLog().totalMacros();
+        Macros macros = gui.getUser().getJournal().getLastLog().totalMacros();
         updateCalories(macros.getCalories());
         updateProtein(macros.getProtein());
         updateCarbs(macros.getCarbs());
@@ -177,7 +167,7 @@ public class ProgressPanel {
     // EFFECTS: update calorie progress
     private void updateCalories(double calories) {
         JProgressBar progress = (JProgressBar) panel.getComponent(7);
-        progress.setMaximum((int) user.getMacrosNeeded().getCalories());
+        progress.setMaximum((int) gui.getUser().getMacrosNeeded().getCalories());
         progress.setValue((int) calories);
     }
 
@@ -185,7 +175,7 @@ public class ProgressPanel {
     // EFFECTS: update protein progress
     private void updateProtein(double protein) {
         JProgressBar progress = (JProgressBar) panel.getComponent(8);
-        progress.setMaximum((int) user.getMacrosNeeded().getProtein());
+        progress.setMaximum((int) gui.getUser().getMacrosNeeded().getProtein());
         progress.setValue((int) protein);
     }
 
@@ -193,7 +183,7 @@ public class ProgressPanel {
     // EFFECTS: update carbohydrate progress
     private void updateCarbs(double carbs) {
         JProgressBar progress = (JProgressBar) panel.getComponent(9);
-        progress.setMaximum((int) user.getMacrosNeeded().getCarbs());
+        progress.setMaximum((int) gui.getUser().getMacrosNeeded().getCarbs());
         progress.setValue((int) carbs);
     }
 
@@ -201,7 +191,7 @@ public class ProgressPanel {
     // EFFECTS: update fat progress
     private void updateFat(double fat) {
         JProgressBar progress = (JProgressBar) panel.getComponent(10);
-        progress.setMaximum((int) user.getMacrosNeeded().getFat());
+        progress.setMaximum((int) gui.getUser().getMacrosNeeded().getFat());
         progress.setValue((int) fat);
     }
 
@@ -215,6 +205,7 @@ public class ProgressPanel {
     // MODIFIES: this
     // EFFECTS: update weight label info
     private void updateWeightLabels() {
+        User user = gui.getUser();
         ((JLabel) panel.getComponent(11)).setText("# of Days: " + user.getJournal().getLogs().size());
         ((JLabel) panel.getComponent(12)).setText("Start: " + user.getJournal().getLog(1).getWeight());
         ((JLabel) panel.getComponent(13)).setText("Goal: " + user.getJournal().getGoal());
@@ -223,6 +214,7 @@ public class ProgressPanel {
     // MODIFIES: this
     // EFFECTS: update weight progress info
     private void updateWeightProgress() {
+        User user = gui.getUser();
         double goal = user.getJournal().getGoal();
         double starting = user.getJournal().getWeightTracker().get(0);
         double current = user.getJournal().getLastLog().getWeight();

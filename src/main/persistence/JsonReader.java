@@ -187,6 +187,6 @@ public class JsonReader {
         double protein = jsonObject.getDouble("protein");
         double carbs = jsonObject.getDouble("carbs");
         double fat = jsonObject.getDouble("fat");
-        user.updateMacros(protein, carbs, fat, calories);
+        user.setMacrosNeeded(new Macros(protein, carbs, fat));
     }
 }

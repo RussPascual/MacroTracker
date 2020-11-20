@@ -17,16 +17,13 @@ public class FavouritesPanel {
     private static final String FOOD = "food";
     private static final String INGREDIENTS = "ingredients";
 
-    private Journal journal;
-    private Favourites saved;
     private int currentFood;
     private int currentIngredient;
     private JPanel panel;
     private GUI gui;
 
     // EFFECTS: constructs a favourites panel
-    public FavouritesPanel(User user, GUI gui) {
-        updateUser(user);
+    public FavouritesPanel(GUI gui) {
         currentFood = 0;
         currentIngredient = 0;
         this.gui = gui;
@@ -35,13 +32,6 @@ public class FavouritesPanel {
 
     public JPanel getPanel() {
         return panel;
-    }
-
-    // MODIFIES: this
-    // EFFECTS: updates the journal and saved based on user
-    public void updateUser(User user) {
-        journal = user.getJournal();
-        saved = user.getSaved();
     }
 
     // MODIFIES: this
@@ -158,6 +148,7 @@ public class FavouritesPanel {
     // EFFECTS: add a new food based on text field input
     //          throw IllegalArgumentException if input is negative
     private void addNewFood() {
+        Favourites saved = gui.getUser().getSaved();
         String name = ((JTextField) panel.getComponent(3)).getText();
         double calories = Double.parseDouble(((JTextField) panel.getComponent(5)).getText());
         double protein = Double.parseDouble(((JTextField) panel.getComponent(7)).getText());
@@ -299,6 +290,8 @@ public class FavouritesPanel {
     // EFFECTS: add entry to logs based on current food
     //          throw InputMismatchException if time < 0 or time > 23
     private void addEntry() {
+        Favourites saved = gui.getUser().getSaved();
+        Journal journal = gui.getUser().getJournal();
         Food food = saved.getFoods().get(currentFood - 1);
         int time = Integer.parseInt(((JTextField) panel.getComponent(27)).getText());
         if (time < 0 || time > 23) {
@@ -318,6 +311,7 @@ public class FavouritesPanel {
             public void actionPerformed(ActionEvent e) {
                 clearMessages();
                 if (currentFood > 0) {
+                    Favourites saved = gui.getUser().getSaved();
                     saved.removeFood(saved.getFoods().get(currentFood - 1));
                 }
                 update();
@@ -375,6 +369,7 @@ public class FavouritesPanel {
     // EFFECTS: find the next or previous element in list based on input
     //          throw InvalidParameterException if list is not "food" or ingredients"
     private void rotate(boolean forward, String list) {
+        Favourites saved = gui.getUser().getSaved();
         if (list.equals("food")) {
             if (forward) {
                 currentFood = (currentFood == saved.getFoods().size()) ? 1 : currentFood + 1;
@@ -407,6 +402,7 @@ public class FavouritesPanel {
     // MODIFIES: this
     // EFFECTS: update food labels and fields
     private void updateFood() {
+        Favourites saved = gui.getUser().getSaved();
         if (currentFood > saved.getFoods().size()) {
             currentFood = saved.getFoods().size();
         }
@@ -424,7 +420,7 @@ public class FavouritesPanel {
     // MODIFIES: this
     // EFFECTS: update ingredient labels and fields
     private void updateIngredients() {
-        if (saved.getFoods().get(currentFood - 1).isMeal()) {
+        if (gui.getUser().getSaved().getFoods().get(currentFood - 1).isMeal()) {
             if (currentIngredient == 0) {
                 currentIngredient = 1;
             }
@@ -458,6 +454,7 @@ public class FavouritesPanel {
     // MODIFIES: this
     // EFFECTS: updates current food info
     private void setCurrentFood() {
+        Favourites saved = gui.getUser().getSaved();
         String foodName = saved.getFoods().get(currentFood - 1).getName();
         ((JLabel) panel.getComponent(17)).setText("Food Name: " + foodName);
         double calories = saved.getFoods().get(currentFood - 1).getMacros().getCalories();
@@ -473,7 +470,7 @@ public class FavouritesPanel {
     // MODIFIES: this
     // EFFECTS: updates current ingredient info
     private void setCurrentIngredient() {
-        Meal currentMeal = (Meal) saved.getFoods().get(currentFood - 1);
+        Meal currentMeal = (Meal) gui.getUser().getSaved().getFoods().get(currentFood - 1);
         String name = currentMeal.getIngredients().get(currentIngredient - 1).getName();
         ((JLabel) panel.getComponent(23)).setText("--- " + name);
     }

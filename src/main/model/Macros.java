@@ -62,7 +62,7 @@ public class Macros {
         calories += macros.getCalories();
     }
 
-    // REQUIRES: input's macros <= this' macros at all fields
+    // REQUIRES: this' macros >= input's macros
     // MODIFIES: this
     // EFFECTS: removes input's macros from this' macros
     public void removeMacros(Macros macros) {
