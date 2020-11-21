@@ -28,3 +28,17 @@ similar app named "MyFitnessPal" which offered similar services and helped me wi
 - As a user, I want to be able to access my previously saved data when I reopen the app
 - As a user, I want to be able to be prompted to save data right before quitting the application
 
+## Phase 4: Task 2 - Made *User* class robust including methods
+- *updateMacros*
+- *setMacroGoals*
+- *updateWeight*
+- *updateUser*
+
+## Phase 4: Task 3 - Refactoring possibilities
+- Utilize the *Composite Pattern* for the Food (Component), FoodItem (Leaf), and Meal (Composite) classes
+- Make Journal start with 1 DayLog upon construction rather than calling it separately in ui implementation
+- Create an Information class for use in User to handle user information methods
+- Refactor all progress related functionality from User class into a *Progress* class
+- Make *Progress* class utilize the *Observer Pattern*
+- Move Food methods regarding adding and removing macros to the Meal class since FoodItem does not use it
+- Make Panel classes handle visuals separately from user input then utilize the *Observer Pattern*
